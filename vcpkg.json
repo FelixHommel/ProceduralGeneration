@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    "glad2cmake",
+    "glfw3",
+    "glm",
+    "gtest",
+    "spdlog"
+  ]
+}

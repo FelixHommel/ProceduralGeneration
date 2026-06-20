@@ -1,0 +1,7 @@
+[project]
+name = "ProceduralGeneration"
+version = "0.1.0"
+description = "Procdural terrain generation and rendering"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
