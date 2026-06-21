@@ -1,3 +1,4 @@
+#include "opengl/Shader.hpp"
 #include "rendering/GlfwContext.hpp"
 #include "rendering/Window.hpp"
 
@@ -23,6 +24,13 @@ int main()
         std::println(stderr, "Failure while setting up GLFW:\n{}", e.what());
         return 0;
     }
+
+    const auto marchingCubes{ Shader::loadFromFile(
+        PEN_ROOT "resources/shaders/MarchingCubes.vert", PEN_ROOT "resources/shaders/MarchingCubes.frag"
+    ) };
+    const auto lighting{ Shader::loadFromFile(
+        PEN_ROOT "resources/shaders/LightSource.vert", PEN_ROOT "resources/shaders/LightSource.frag"
+    ) };
 
     while(!window->shouldClose())
     {
