@@ -1,13 +1,19 @@
 set(NAME "ProceduralGenerationLib")
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
-add_library(${NAME} ./rendering/GlfwContext.cpp ./rendering/Window.cpp)
+add_library(
+    ${NAME}
+    ./opengl/Shader.cpp
+    ./rendering/GlfwContext.cpp
+    ./rendering/Window.cpp
+)
 
 target_sources(
     ${NAME}
     PRIVATE
         FILE_SET HEADERS
             FILES
+                ./opengl/Shader.hpp
                 ./rendering/GlfwContext.hpp
                 ./rendering/Window.hpp
                 ./utility/Assert.hpp
