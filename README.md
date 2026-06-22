@@ -49,3 +49,4 @@ labeled as such and can be filtered out by ctest.
 ## Acknowledgments / Credits
 
 - [LearnOpenGL.com](https://learnopengl.com/)
+- [OpenGL Sphere](https://www.songho.ca/opengl/gl_sphere.html)
