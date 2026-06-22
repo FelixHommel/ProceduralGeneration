@@ -29,10 +29,16 @@ namespace pen
 /// \author Felix Hommel
 /// \date 6/22/2026
 ///
-/// \note Adaption of https://www.songho.ca/opengl/gl_sphere.html
+/// \see Adaption of https://www.songho.ca/opengl/gl_sphere.html
 class Sphere
 {
 public:
+    /// \brief Create a new \ref Sphere
+    ///
+    /// \param radius (optional) The radius of the \ref Sphere
+    /// \param sectorCount (optional) The amount of sectors (longitude)
+    /// \param stackCount (optional) The amount of stacks (latitude)
+    /// \param smooth (optional) Generate a smoothed out or a flattened \ref Sphere
     explicit Sphere(
         float radius = ::defaults::RADIUS,
         unsigned int sectorCount = ::defaults::SECTOR_COUNT,
@@ -46,10 +52,12 @@ public:
     Sphere(Sphere&&) = delete;
     Sphere& operator=(Sphere&&) = delete;
 
+    /// \brief Draw the Sphere Mesh.
+    ///
+    /// \note Assumes proper Shaders have been activated
     void draw() const;
+    /// \brief Upload the \ref Sphere mesh data to the GPU.
     void copyToGPU();
-
-    void clearSphereData();
 
 private:
     float m_radius;
@@ -71,6 +79,7 @@ private:
     void buildVerticesSmooth();
     void buildVerticesFlat();
     void buildInterleavedVertices();
+
     void addVertex(const glm::vec3& vertex);
     void addNormal(const glm::vec3& normal);
     void addTexCoord(const glm::vec2& texCoord);

@@ -119,19 +119,9 @@ void Sphere::copyToGPU()
     glDeleteBuffers(1, &ebo);
 }
 
-void Sphere::clearSphereData()
-{
-    std::vector<float>().swap(m_vertices);
-    std::vector<float>().swap(m_normals);
-    std::vector<float>().swap(m_texCoords);
-    std::vector<unsigned int>().swap(m_indices);
-    std::vector<unsigned int>().swap(m_lineIndices);
-}
-
+/// \brief Construct a smooth \ref Sphere mesh
 void Sphere::buildVerticesSmooth()
 {
-    clearSphereData();
-
     const auto invLength{ 1.f / m_radius };
     const auto sectorStep{ (2.f * std::numbers::pi_v<float>) / static_cast<float>(m_sectorCount) };
     const auto stackStep{ std::numbers::pi_v<float> / static_cast<float>(m_stackCount) };
@@ -188,6 +178,7 @@ void Sphere::buildVerticesSmooth()
     buildInterleavedVertices();
 }
 
+/// \brief Construct a flat \ref Sphere mesh
 void Sphere::buildVerticesFlat()
 {
     struct Vertex
@@ -223,8 +214,6 @@ void Sphere::buildVerticesFlat()
             );
         }
     }
-
-    clearSphereData();
 
     int index{ 0 };
     for(int i{ 0 }; i < m_stackCount; ++i)
@@ -315,10 +304,9 @@ void Sphere::buildVerticesFlat()
     buildInterleavedVertices();
 }
 
+/// \brief Combine the individual vertex attributes into a single array of vertex data.
 void Sphere::buildInterleavedVertices()
 {
-    std::vector<float>().swap(m_interleavedVertices);
-
     std::size_t i{ 0 };
     std::size_t j{ 0 };
     for(i = 0, j = 0; i < m_vertices.size(); i += 3, j += 2) // NOLINT(readability-magic-numbers)
