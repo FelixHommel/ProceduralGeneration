@@ -1,6 +1,7 @@
 #include "opengl/Shader.hpp"
 #include "rendering/GlfwContext.hpp"
 #include "rendering/Window.hpp"
+#include "terrain/Sphere.hpp"
 
 #include <exception>
 #include <memory>
@@ -31,6 +32,9 @@ int main()
     const auto lighting{ Shader::loadFromFile(
         PEN_ROOT "resources/shaders/LightSource.vert", PEN_ROOT "resources/shaders/LightSource.frag"
     ) };
+
+    const auto lightSphere{ std::make_unique<Sphere>() };
+    lightSphere->copyToGPU();
 
     while(!window->shouldClose())
     {
