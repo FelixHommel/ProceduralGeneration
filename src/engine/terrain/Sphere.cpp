@@ -149,11 +149,11 @@ void Sphere::buildVerticesSmooth()
 
     for(unsigned int i{ 0 }; i < m_stackCount; ++i)
     {
-        const auto k1{ i * (m_sectorCount + 1) };
-        const auto k2{ k1 + m_sectorCount + 1 };
-
         for(unsigned int j{ 0 }; j < m_sectorCount; ++j)
         {
+            const auto k1{ (i * (m_sectorCount + 1)) + j };
+            const auto k2{ k1 + m_sectorCount + 1 };
+
             if(i != 0)
                 addIndices({ k1, k2, k1 + 1 });
 
