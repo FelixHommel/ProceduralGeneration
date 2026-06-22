@@ -22,6 +22,7 @@ if(MSVC)
 endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
 option(PEN_DEBUG "Enable debug statements and asserts" ON)
 option(PEN_ENABLE_ASSERTIONS "Enable assertions" ON)
