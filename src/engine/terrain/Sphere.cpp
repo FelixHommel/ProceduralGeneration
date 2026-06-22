@@ -61,7 +61,7 @@ Sphere::~Sphere()
 void Sphere::draw() const
 {
     glBindVertexArray(m_vao);
-    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indices.size()), GL_UNSIGNED_INT, m_indices.data());
+    glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(m_indices.size()), GL_UNSIGNED_INT, nullptr);
 }
 
 void Sphere::copyToGPU()
