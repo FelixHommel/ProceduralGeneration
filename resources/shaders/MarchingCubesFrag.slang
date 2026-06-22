@@ -31,10 +31,22 @@ float3 diffuseLight(float3 lightDir, float3 normal)
 
 float3 specularLight(float3 fragPos, float3 lightDir, float3 normal)
 {
-    const float viewDir = normalize(gUniforms.viewPos - fragPos);
+    const float3 viewDir = normalize(gUniforms.viewPos - fragPos);
+    const float3 reflectDir = reflect(-lightDir, normal);
+
+    const float spec = pow(max(dot(viewDir, reflectDir), 0.f), 32.f);
+
+    return specularStrength * spec * gUniforms.lightColor;
 }
 
 [shader("fragment")]
-float4 fragmentMain(FragmentInput input)
+float4 main(FragmentInput input) : SV_Target
 {
+    const float3 lightDir = normalize(gUniforms.lightPos - input.fragPos);
+    const float3 norm = normalize(input.normal);
+
+    const float3 result =
+        (ambientLight() + diffuseLight(lightDir, norm) + specularLight(input.fragPos, lightDir, norm)) * gUniforms.objectColor;
+
+    return float4(result, 1.f);
 }

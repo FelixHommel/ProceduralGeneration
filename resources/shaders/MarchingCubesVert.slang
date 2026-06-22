@@ -21,7 +21,7 @@ struct VertexOutput
 };
 
 [shader("vertex")]
-VertexOutput vertexMain(VertexInput input)
+VertexOutput main(VertexInput input)
 {
     VertexOutput out;
 
