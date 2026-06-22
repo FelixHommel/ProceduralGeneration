@@ -1,5 +1,7 @@
 #include "Sphere.hpp"
 
+#include "utility/Assert.hpp"
+
 #include <glad/gl.h>
 #include <glm/glm.hpp>
 
@@ -15,9 +17,9 @@ namespace
 constexpr auto MIN_SECTOR_COUNT{ 3 };
 constexpr auto MIN_STACK_COUNT{ 2 };
 
-constexpr auto VERTEX_VERTICES_COUNT{ 3 };
-constexpr auto VERTEX_NORMALS_COUNT{ 3 };
-constexpr auto VERTEX_TEX_COORDS_COUNT{ 2 };
+constexpr auto VERTEX_VERTICES_COUNT{ pen::Sphere::VertexPos::length() };
+constexpr auto VERTEX_NORMALS_COUNT{ pen::Sphere::VertexNorm::length() };
+constexpr auto VERTEX_TEX_COORDS_COUNT{ pen::Sphere::VertexTexCoord::length() };
 constexpr auto VERTEX_STRIDE{ sizeof(float)
                               * (::VERTEX_VERTICES_COUNT + ::VERTEX_NORMALS_COUNT + ::VERTEX_TEX_COORDS_COUNT) };
 
@@ -138,11 +140,13 @@ void Sphere::buildVerticesSmooth()
                 m_radius * stackSin
             ) };
 
-            addVertex(vertex);
-            addNormal(vertex * invLength);
-            addTexCoord(
-                { static_cast<float>(j) / static_cast<float>(m_sectorCount),
-                  static_cast<float>(i) / static_cast<float>(m_stackCount) }
+            m_vertices.push_back(vertex);
+            m_normals.push_back(vertex * invLength);
+            m_texCoords.push_back(
+                glm::vec2(
+                    static_cast<float>(j) / static_cast<float>(m_sectorCount),
+                    static_cast<float>(i) / static_cast<float>(m_stackCount)
+                )
             );
         }
     }
@@ -226,17 +230,17 @@ void Sphere::buildVerticesFlat()
 
             if(i == 0)
             {
-                addVertex(v1.position);
-                addVertex(v2.position);
-                addVertex(v4.position);
+                m_vertices.push_back(v1.position);
+                m_vertices.push_back(v2.position);
+                m_vertices.push_back(v4.position);
 
-                addTexCoord(v1.texCoord);
-                addTexCoord(v2.texCoord);
-                addTexCoord(v4.texCoord);
+                m_texCoords.push_back(v1.texCoord);
+                m_texCoords.push_back(v2.texCoord);
+                m_texCoords.push_back(v4.texCoord);
 
                 const auto normal{ ::computeFaceNormals(v1.position, v2.position, v4.position) };
                 for(int k{ 0 }; k < 3; ++k) // NOTE: Add normal for each vertex
-                    addNormal(normal);
+                    m_normals.push_back(normal);
 
                 addIndices({ index, index + 1, index + 2 });
 
@@ -247,17 +251,17 @@ void Sphere::buildVerticesFlat()
             }
             else if(i == (m_stackCount - 1))
             {
-                addVertex(v1.position);
-                addVertex(v2.position);
-                addVertex(v3.position);
+                m_vertices.push_back(v1.position);
+                m_vertices.push_back(v2.position);
+                m_vertices.push_back(v3.position);
 
-                addTexCoord(v1.texCoord);
-                addTexCoord(v2.texCoord);
-                addTexCoord(v3.texCoord);
+                m_texCoords.push_back(v1.texCoord);
+                m_texCoords.push_back(v2.texCoord);
+                m_texCoords.push_back(v3.texCoord);
 
                 const auto normal{ ::computeFaceNormals(v1.position, v2.position, v3.position) };
                 for(int k{ 0 }; k < 3; ++k) // NOTE: Add normal for each vertex
-                    addNormal(normal);
+                    m_normals.push_back(normal);
 
                 addIndices({ index, index + 1, index + 2 });
 
@@ -270,19 +274,19 @@ void Sphere::buildVerticesFlat()
             }
             else
             {
-                addVertex(v1.position);
-                addVertex(v2.position);
-                addVertex(v3.position);
-                addVertex(v4.position);
+                m_vertices.push_back(v1.position);
+                m_vertices.push_back(v2.position);
+                m_vertices.push_back(v3.position);
+                m_vertices.push_back(v4.position);
 
-                addTexCoord(v1.texCoord);
-                addTexCoord(v2.texCoord);
-                addTexCoord(v3.texCoord);
-                addTexCoord(v4.texCoord);
+                m_texCoords.push_back(v1.texCoord);
+                m_texCoords.push_back(v2.texCoord);
+                m_texCoords.push_back(v3.texCoord);
+                m_texCoords.push_back(v4.texCoord);
 
                 const auto normal{ ::computeFaceNormals(v1.position, v2.position, v3.position) };
                 for(int k{ 0 }; k < 4; ++k) // NOLINT(readability-magic-numbers) // NOTE: Add normal for each vertex
-                    addNormal(normal);
+                    m_normals.push_back(normal);
 
                 addIndices({ index, index + 1, index + 2 });
                 addIndices({ index + 2, index + 1, index + 3 });
@@ -303,39 +307,14 @@ void Sphere::buildVerticesFlat()
 /// \brief Combine the individual vertex attributes into a single array of vertex data.
 void Sphere::buildInterleavedVertices()
 {
-    std::size_t i{ 0 };
-    std::size_t j{ 0 };
-    for(i = 0, j = 0; i < m_vertices.size(); i += 3, j += 2)
-    {
-        m_interleavedVertices.emplace_back(
-            glm::vec3(m_vertices[i], m_vertices[i + 1], m_vertices[i + 2]),
-            glm::vec3(m_normals[i], m_vertices[i + 1], m_vertices[i + 2]),
-            glm::vec2(m_texCoords[j], m_texCoords[j + 1])
-        );
-    }
+    PEN_ASSERT(m_vertices.size() == m_normals.size(), "Vertex attribute size mismatch");
+    PEN_ASSERT(m_vertices.size() == m_texCoords.size(), "Vertex attribute size mismatch");
+
+    for(std::size_t i{ 0 }; i < m_vertices.size(); ++i)
+        m_interleavedVertices.emplace_back(m_vertices[i], m_normals[i], m_texCoords[i]);
 }
 
-void Sphere::addVertex(const glm::vec3& vertex)
-{
-    m_vertices.push_back(vertex.x);
-    m_vertices.push_back(vertex.y);
-    m_vertices.push_back(vertex.z);
-}
-
-void Sphere::addNormal(const glm::vec3& normal)
-{
-    m_normals.push_back(normal.x);
-    m_normals.push_back(normal.y);
-    m_normals.push_back(normal.z);
-}
-
-void Sphere::addTexCoord(const glm::vec2& texCoord)
-{
-    m_texCoords.push_back(texCoord.s);
-    m_texCoords.push_back(texCoord.t);
-}
-
-void Sphere::addIndices(const glm::vec<3, unsigned int>& index)
+void Sphere::addIndices(const Index& index)
 {
     m_indices.push_back(index.x);
     m_indices.push_back(index.y);

@@ -33,6 +33,11 @@ namespace pen
 class Sphere
 {
 public:
+    using VertexPos = glm::vec3;
+    using VertexNorm = glm::vec3;
+    using VertexTexCoord = glm::vec2;
+    using Index = glm::vec<3, unsigned int>;
+
     /// \brief Create a new \ref Sphere
     ///
     /// \param radius (optional) The radius of the \ref Sphere
@@ -62,9 +67,9 @@ public:
 private:
     struct Vertex
     {
-        glm::vec3 position;
-        glm::vec3 normal;
-        glm::vec2 texCoord;
+        VertexPos position;
+        VertexNorm normal;
+        VertexTexCoord texCoord;
     };
 
     float m_radius;
@@ -72,9 +77,9 @@ private:
     unsigned int m_stackCount;
     bool m_smooth;
 
-    std::vector<float> m_vertices;
-    std::vector<float> m_normals;
-    std::vector<float> m_texCoords;
+    std::vector<VertexPos> m_vertices;
+    std::vector<VertexNorm> m_normals;
+    std::vector<VertexTexCoord> m_texCoords;
     std::vector<unsigned int> m_indices;
     std::vector<unsigned int> m_lineIndices;
 
@@ -89,10 +94,7 @@ private:
     void buildVerticesFlat();
     void buildInterleavedVertices();
 
-    void addVertex(const glm::vec3& vertex);
-    void addNormal(const glm::vec3& normal);
-    void addTexCoord(const glm::vec2& texCoord);
-    void addIndices(const glm::vec<3, unsigned int>& index);
+    void addIndices(const Index& index);
 };
 
 } // namespace pen
