@@ -6,6 +6,7 @@ add_library(
     ./opengl/Shader.cpp
     ./rendering/GlfwContext.cpp
     ./rendering/Window.cpp
+    ./terrain/Sphere.cpp
 )
 
 target_sources(
@@ -16,6 +17,7 @@ target_sources(
                 ./opengl/Shader.hpp
                 ./rendering/GlfwContext.hpp
                 ./rendering/Window.hpp
+                ./terrain/Sphere.hpp
                 ./utility/Assert.hpp
 )
 
