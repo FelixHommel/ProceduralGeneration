@@ -60,8 +60,8 @@
             "displayName": "Debug (on gcc compilers)",
             "inherits": "debug-base",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++"
+                "CMAKE_C_COMPILER": "gcc-14",
+                "CMAKE_CXX_COMPILER": "g++-14"
             }
         },
         {
@@ -70,8 +70,8 @@
             "displayName": "Release (on gcc compilers)",
             "inherits": "release-base",
             "cacheVariables": {
-                "CMAKE_C_COMPILER": "gcc",
-                "CMAKE_CXX_COMPILER": "g++"
+                "CMAKE_C_COMPILER": "gcc-14",
+                "CMAKE_CXX_COMPILER": "g++-14"
             }
         },
         {
