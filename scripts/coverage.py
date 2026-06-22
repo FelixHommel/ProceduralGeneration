@@ -91,13 +91,24 @@ def main() -> int:
     out.mkdir(parents=True, exist_ok=True)
 
     if args.zerocounters:
-        run_command(["lcov", "--directory", str(args.build_dir), "--zerocounters"])
+        run_command(
+            [
+                "lcov",
+                "--gcov-tool",
+                "gcov-14",
+                "--directory",
+                str(args.build_dir),
+                "--zerocounters",
+            ]
+        )
 
     # NOTE: Step 1) Gather all data
     raw = out / args.raw
     run_command(
         [
             "lcov",
+            "--gcov-tool",
+            "gcov-14",
             "--directory",
             str(args.build_dir),
             "--capture",
@@ -113,6 +124,8 @@ def main() -> int:
     run_command(
         [
             "lcov",
+            "--gcov-tool",
+            "gcov-14",
             "--ignore-errors",
             "unused",
             "--remove",
