@@ -46,6 +46,7 @@ public:
     Window& operator=(Window&& other) noexcept;
 
     [[nodiscard]] bool shouldClose() const noexcept { return glfwWindowShouldClose(m_window) == GLFW_TRUE; }
+    [[nodiscard]] Viewport viewport() const noexcept { return m_viewport; }
 
 private:
     static constexpr auto CONTEXT_VERSION_MAJ{ 3 };
