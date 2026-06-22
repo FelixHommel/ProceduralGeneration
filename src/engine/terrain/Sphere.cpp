@@ -75,7 +75,7 @@ void Sphere::copyToGPU()
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(
         GL_ARRAY_BUFFER,
-        static_cast<GLsizeiptr>(sizeof(float) * m_interleavedVertices.size()),
+        static_cast<GLsizeiptr>(sizeof(Vertex) * m_interleavedVertices.size()),
         m_interleavedVertices.data(),
         GL_STATIC_DRAW
     );
@@ -177,10 +177,10 @@ void Sphere::buildVerticesSmooth()
 /// \brief Construct a flat \ref Sphere mesh
 void Sphere::buildVerticesFlat()
 {
-    struct Vertex
+    struct TmpVertex
     {
-        Vertex() = default;
-        Vertex(glm::vec3 p, glm::vec2 t) : position{ std::move(p) }, texCoord{ std::move(t) } {}
+        TmpVertex() = default;
+        TmpVertex(glm::vec3 p, glm::vec2 t) : position{ std::move(p) }, texCoord{ std::move(t) } {}
 
         glm::vec3 position;
         glm::vec2 texCoord;
@@ -189,7 +189,7 @@ void Sphere::buildVerticesFlat()
     const float sectorStep{ (2.f * std::numbers::pi_v<float>) / static_cast<float>(m_sectorCount) };
     const float stackStep{ std::numbers::pi_v<float> / static_cast<float>(m_stackCount) };
 
-    std::vector<Vertex> tmpVertices;
+    std::vector<TmpVertex> tmpVertices;
     for(int i{ 0 }; i <= m_stackCount; ++i)
     {
         const auto stackAngle{ (std::numbers::pi_v<float> / 2.f) - (static_cast<float>(i) * stackStep) };
@@ -307,16 +307,11 @@ void Sphere::buildInterleavedVertices()
     std::size_t j{ 0 };
     for(i = 0, j = 0; i < m_vertices.size(); i += 3, j += 2)
     {
-        m_interleavedVertices.push_back(m_vertices[i]);
-        m_interleavedVertices.push_back(m_vertices[i + 1]);
-        m_interleavedVertices.push_back(m_vertices[i + 2]);
-
-        m_interleavedVertices.push_back(m_normals[i]);
-        m_interleavedVertices.push_back(m_normals[i + 1]);
-        m_interleavedVertices.push_back(m_normals[i + 2]);
-
-        m_interleavedVertices.push_back(m_texCoords[j]);
-        m_interleavedVertices.push_back(m_texCoords[j + 1]);
+        m_interleavedVertices.emplace_back(
+            glm::vec3(m_vertices[i], m_vertices[i + 1], m_vertices[i + 2]),
+            glm::vec3(m_normals[i], m_vertices[i + 1], m_vertices[i + 2]),
+            glm::vec2(m_texCoords[j], m_texCoords[j + 1])
+        );
     }
 }
 

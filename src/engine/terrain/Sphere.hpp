@@ -60,6 +60,13 @@ public:
     void copyToGPU();
 
 private:
+    struct Vertex
+    {
+        glm::vec3 position;
+        glm::vec3 normal;
+        glm::vec2 texCoord;
+    };
+
     float m_radius;
     unsigned int m_sectorCount;
     unsigned int m_stackCount;
@@ -71,7 +78,7 @@ private:
     std::vector<unsigned int> m_indices;
     std::vector<unsigned int> m_lineIndices;
 
-    std::vector<float> m_interleavedVertices;
+    std::vector<Vertex> m_interleavedVertices;
     int m_interleavedStride{ ::defaults::INTERLEAVED_STRIDE };
 
     unsigned int m_vao{ 0u };
