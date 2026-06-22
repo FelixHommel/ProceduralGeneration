@@ -54,6 +54,8 @@ Sphere::Sphere(float radius, unsigned int sectorCount, unsigned int stackCount, 
 Sphere::~Sphere()
 {
     glDeleteVertexArrays(1, &m_vao);
+    glDeleteBuffers(1, &m_vbo);
+    glDeleteBuffers(1, &m_ebo);
 }
 
 void Sphere::draw() const
@@ -64,16 +66,13 @@ void Sphere::draw() const
 
 void Sphere::copyToGPU()
 {
-    GLuint vbo{ 0 };
-    GLuint ebo{ 0 };
-
     glGenVertexArrays(1, &m_vao);
-    glGenBuffers(1, &vbo);
-    glGenBuffers(1, &ebo);
+    glGenBuffers(1, &m_vbo);
+    glGenBuffers(1, &m_ebo);
 
     glBindVertexArray(m_vao);
 
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(
         GL_ARRAY_BUFFER,
         static_cast<GLsizeiptr>(sizeof(float) * m_interleavedVertices.size()),
@@ -81,7 +80,7 @@ void Sphere::copyToGPU()
         GL_STATIC_DRAW
     );
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_ebo);
     glBufferData(
         GL_ELEMENT_ARRAY_BUFFER,
         static_cast<GLsizeiptr>(sizeof(unsigned int) * m_indices.size()),
@@ -114,9 +113,6 @@ void Sphere::copyToGPU()
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
-    glDeleteBuffers(1, &vbo);
-    glDeleteBuffers(1, &ebo);
 }
 
 /// \brief Construct a smooth \ref Sphere mesh

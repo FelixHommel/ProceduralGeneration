@@ -75,6 +75,8 @@ private:
     int m_interleavedStride{ ::defaults::INTERLEAVED_STRIDE };
 
     unsigned int m_vao{ 0u };
+    unsigned int m_vbo{ 0u };
+    unsigned int m_ebo{ 0u };
 
     void buildVerticesSmooth();
     void buildVerticesFlat();
