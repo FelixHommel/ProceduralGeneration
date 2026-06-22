@@ -142,11 +142,9 @@ void Sphere::buildVerticesSmooth()
 
             m_vertices.push_back(vertex);
             m_normals.push_back(vertex * invLength);
-            m_texCoords.push_back(
-                glm::vec2(
-                    static_cast<float>(j) / static_cast<float>(m_sectorCount),
-                    static_cast<float>(i) / static_cast<float>(m_stackCount)
-                )
+            m_texCoords.emplace_back(
+                static_cast<float>(j) / static_cast<float>(m_sectorCount),
+                static_cast<float>(i) / static_cast<float>(m_stackCount)
             );
         }
     }
