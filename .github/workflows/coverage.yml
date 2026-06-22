@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout the Repository
       uses: actions/checkout@v6
@@ -41,8 +41,8 @@ jobs:
     - name: Configure + Build
       uses: lukka/run-cmake@af1be47fd7c933593f687731bc6fdbee024d3ff4 # v10.8
       with:
-        configurePreset: code-coverage 
-        configurePresetAdditionalArgs: "[`-DPEN_ENABLE_CLANG_TIDY=OFF`]"
+        configurePreset: code-coverage
+        configurePresetAdditionalArgs: "[`-DPEN_ENABLE_CLANG_TIDY=OFF`, `-DCMAKE_C_COMPILER=gcc-14`, `-DCMAKE_CXX_COMPILER=g++-14`]"
         buildPreset: code-coverage
 
     - name: Run Tests
