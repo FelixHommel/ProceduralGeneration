@@ -32,10 +32,10 @@ endif()
 
 target_link_libraries(
     ${NAME}
+    PUBLIC glm::glm
     PRIVATE
         Glad2CMake::glad2cmake
         glfw
-        glm::glm
         OpenGL::GL
         project_warnings
         spdlog::spdlog
