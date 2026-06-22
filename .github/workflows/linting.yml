@@ -2,8 +2,9 @@ name: Linting Check
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
 
 jobs:
   clang-format-check:
