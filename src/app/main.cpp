@@ -52,6 +52,8 @@ int main()
     constexpr auto cameraRotationMod{ 1.5f };
     constexpr auto lightRotationMod{ 5.f };
 
+    constexpr auto movingScene{ false };
+
     const auto windowSize{ window->viewport() };
     const auto projection{ glm::perspective(
         glm::radians(45.f), static_cast<float>(windowSize.width) / static_cast<float>(windowSize.height), 0.1f, 100.f
@@ -67,16 +69,27 @@ int main()
     {
         GlfwContext::clear();
 
-        const auto cameraX{ static_cast<float>(std::sin(cameraRotationMod * glfwGetTime()) * cameraRotateRadius) };
-        const auto cameraZ{ static_cast<float>(std::cos(cameraRotationMod * glfwGetTime()) * cameraRotateRadius) };
-        const auto viewPos{ glm::vec3(cameraX, cameraY, cameraZ) };
+        auto viewPos{ glm::vec3(0.f) };
+        auto lightPos{ glm::vec3(0.f) };
+
+        if constexpr(movingScene)
+        {
+            const auto lightX{ static_cast<float>(std::sin(lightRotationMod * glfwGetTime()) * lightPosRadius) };
+            const auto lightZ{ static_cast<float>(std::cos(lightRotationMod * glfwGetTime()) * lightPosRadius) };
+            const auto cameraX{ static_cast<float>(std::sin(cameraRotationMod * glfwGetTime()) * cameraRotateRadius) };
+            const auto cameraZ{ static_cast<float>(std::cos(cameraRotationMod * glfwGetTime()) * cameraRotateRadius) };
+
+            viewPos = glm::vec3(cameraX, cameraY, cameraZ);
+            lightPos = glm::vec3(lightX, 0.f, lightZ);
+        }
+        else
+        {
+            viewPos = glm::vec3(-1.f, cameraY, -1.f);
+            lightPos = glm::vec3(0.f);
+        }
 
         auto view{ glm::mat4(1.f) };
         view = glm::lookAt(viewPos, glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
-
-        const auto lightX{ static_cast<float>(std::sin(lightRotationMod * glfwGetTime()) * lightPosRadius) };
-        const auto lightZ{ static_cast<float>(std::cos(lightRotationMod * glfwGetTime()) * lightPosRadius) };
-        const auto lightPos{ glm::vec3(lightX, 0.f, lightZ) };
 
         const auto marchingCubesModel{ glm::mat4(1.f) };
 
@@ -95,10 +108,7 @@ int main()
         lightingModel = glm::translate(lightingModel, lightPos);
 
         lighting->use();
-        // lighting->setVector3f("lightPos", lightPos);
         lighting->setVector3f("lightColor", lightColor);
-        // lighting->setVector3f("objectColor", objectColor);
-        // lighting->setVector3f("viewPos", viewPos);
 
         lighting->setMatrix4f("model", lightingModel);
         lighting->setMatrix4f("view", view);
