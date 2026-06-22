@@ -235,7 +235,7 @@ void Sphere::buildVerticesFlat()
                 addTexCoord(v4.texCoord);
 
                 const auto normal{ ::computeFaceNormals(v1.position, v2.position, v4.position) };
-                for(int k{ 0 }; k < 3; ++k) // NOLINT(readability-magic-numbers) // NOTE: Add normal for each vertex
+                for(int k{ 0 }; k < 3; ++k) // NOTE: Add normal for each vertex
                     addNormal(normal);
 
                 addIndices({ index, index + 1, index + 2 });
@@ -243,7 +243,7 @@ void Sphere::buildVerticesFlat()
                 m_lineIndices.push_back(index);
                 m_lineIndices.push_back(index + 1);
 
-                index += 3; // NOLINT(readability-magic-numbers)
+                index += 3;
             }
             else if(i == (m_stackCount - 1))
             {
@@ -256,7 +256,7 @@ void Sphere::buildVerticesFlat()
                 addTexCoord(v3.texCoord);
 
                 const auto normal{ ::computeFaceNormals(v1.position, v2.position, v3.position) };
-                for(int k{ 0 }; k < 3; ++k) // NOLINT(readability-magic-numbers) // NOTE: Add normal for each vertex
+                for(int k{ 0 }; k < 3; ++k) // NOTE: Add normal for each vertex
                     addNormal(normal);
 
                 addIndices({ index, index + 1, index + 2 });
@@ -266,7 +266,7 @@ void Sphere::buildVerticesFlat()
                 m_lineIndices.push_back(index);
                 m_lineIndices.push_back(index + 2);
 
-                index += 3; // NOLINT(readability-magic-numbers)
+                index += 3;
             }
             else
             {
@@ -285,7 +285,7 @@ void Sphere::buildVerticesFlat()
                     addNormal(normal);
 
                 addIndices({ index, index + 1, index + 2 });
-                addIndices({ index + 2, index + 1, index + 3 }); // NOLINT(readability-magic-numbers)
+                addIndices({ index + 2, index + 1, index + 3 });
 
                 m_lineIndices.push_back(index);
                 m_lineIndices.push_back(index + 1);
@@ -305,7 +305,7 @@ void Sphere::buildInterleavedVertices()
 {
     std::size_t i{ 0 };
     std::size_t j{ 0 };
-    for(i = 0, j = 0; i < m_vertices.size(); i += 3, j += 2) // NOLINT(readability-magic-numbers)
+    for(i = 0, j = 0; i < m_vertices.size(); i += 3, j += 2)
     {
         m_interleavedVertices.push_back(m_vertices[i]);
         m_interleavedVertices.push_back(m_vertices[i + 1]);
@@ -340,7 +340,7 @@ void Sphere::addTexCoord(const glm::vec2& texCoord)
     m_texCoords.push_back(texCoord.t);
 }
 
-void Sphere::addIndices(const glm::vec<3, unsigned int>& index) // NOLINT(readability-magic-numbers)
+void Sphere::addIndices(const glm::vec<3, unsigned int>& index)
 {
     m_indices.push_back(index.x);
     m_indices.push_back(index.y);

@@ -85,7 +85,7 @@ private:
     void addVertex(const glm::vec3& vertex);
     void addNormal(const glm::vec3& normal);
     void addTexCoord(const glm::vec2& texCoord);
-    void addIndices(const glm::vec<3, unsigned int>& index); // NOLINT(readability-magic-numbers)
+    void addIndices(const glm::vec<3, unsigned int>& index);
 };
 
 } // namespace pen
