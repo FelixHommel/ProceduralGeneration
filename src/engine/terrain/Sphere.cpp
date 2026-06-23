@@ -124,13 +124,13 @@ void Sphere::buildVerticesSmooth()
     const auto sectorStep{ (2.f * std::numbers::pi_v<float>) / static_cast<float>(m_sectorCount) };
     const auto stackStep{ std::numbers::pi_v<float> / static_cast<float>(m_stackCount) };
 
-    for(int i{ 0 }; i <= m_stackCount; ++i)
+    for(unsigned int i{ 0 }; i <= m_stackCount; ++i)
     {
         const auto stackAngle{ (std::numbers::pi_v<float> / 2.f) - (static_cast<float>(i) * stackStep) };
         const auto stackSin{ std::sin(stackAngle) };
         const auto stackCos{ std::cos(stackAngle) };
 
-        for(int j{ 0 }; j <= m_sectorCount; ++j)
+        for(unsigned int j{ 0 }; j <= m_sectorCount; ++j)
         {
             const auto sectorAngle{ static_cast<float>(j) * sectorStep };
 
@@ -192,14 +192,14 @@ void Sphere::buildVerticesFlat()
     const float stackStep{ std::numbers::pi_v<float> / static_cast<float>(m_stackCount) };
 
     std::vector<TmpVertex> tmpVertices;
-    for(int i{ 0 }; i <= m_stackCount; ++i)
+    for(unsigned int i{ 0 }; i <= m_stackCount; ++i)
     {
         const auto stackAngle{ (std::numbers::pi_v<float> / 2.f) - (static_cast<float>(i) * stackStep) };
 
         const float xy{ m_radius * std::cos(stackAngle) };
         const float z{ m_radius * std::sin(stackAngle) };
 
-        for(int j{ 0 }; j <= m_sectorCount; ++j)
+        for(unsigned int j{ 0 }; j <= m_sectorCount; ++j)
         {
             const auto sectorAngle{ static_cast<float>(j) * sectorStep };
 
@@ -214,12 +214,12 @@ void Sphere::buildVerticesFlat()
     }
 
     int index{ 0 };
-    for(int i{ 0 }; i < m_stackCount; ++i)
+    for(unsigned int i{ 0 }; i < m_stackCount; ++i)
     {
         auto vi1{ i * (static_cast<int>(m_sectorCount) + 1) };
         auto vi2{ (i + 1) * (static_cast<int>(m_sectorCount) + 1) };
 
-        for(int j{ 0 }; j < m_sectorCount; ++j, ++vi1, ++vi2)
+        for(unsigned int j{ 0 }; j < m_sectorCount; ++j, ++vi1, ++vi2)
         {
             const auto& v1{ tmpVertices[vi1] };
             const auto& v2{ tmpVertices[vi2] };
@@ -247,7 +247,7 @@ void Sphere::buildVerticesFlat()
 
                 index += 3;
             }
-            else if(i == (m_stackCount - 1))
+            else if(i == static_cast<unsigned int>(m_stackCount - 1))
             {
                 m_vertices.push_back(v1.position);
                 m_vertices.push_back(v2.position);
