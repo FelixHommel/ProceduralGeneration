@@ -247,7 +247,7 @@ void Sphere::buildVerticesFlat()
 
                 index += 3;
             }
-            else if(i == static_cast<unsigned int>(m_stackCount - 1))
+            else if(i == m_stackCount - 1)
             {
                 m_vertices.push_back(v1.position);
                 m_vertices.push_back(v2.position);
