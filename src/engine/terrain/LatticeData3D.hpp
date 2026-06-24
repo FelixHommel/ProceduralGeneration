@@ -1,6 +1,8 @@
 #ifndef PEN_SRC_ENGINE_TERRAIN_LATTICE_DATA_3D_HPP
 #define PEN_SRC_ENGINE_TERRAIN_LATTICE_DATA_3D_HPP
 
+#include <glm/glm.hpp>
+
 #include <array>
 #include <cstddef>
 
@@ -24,9 +26,11 @@ public:
     const T& operator[](std::size_t index) const { return m_data[index]; }
 
     T& operator[](const std::array<std::size_t, 3>& ijk) { return m_data[linearizeIndex(ijk[0], ijk[1], ijk[2])]; }
-    const T& operator[](const std::array<std::size_t, 3>& ijk) const
+    const T& operator[](const glm::ivec3& ijk) const
     {
-        return m_data[linearizeIndex(ijk[0], ijk[1], ijk[2])];
+        return m_data[linearizeIndex(
+            static_cast<std::size_t>(ijk.x), static_cast<std::size_t>(ijk.y), static_cast<std::size_t>(ijk.z)
+        )];
     }
 
     T& value(std::size_t i, std::size_t j, std::size_t k) { return m_data[linearizeIndex(i, j, k)]; }
