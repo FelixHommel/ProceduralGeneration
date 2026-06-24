@@ -1,18 +1,110 @@
 #include "opengl/Shader.hpp"
 #include "rendering/GlfwContext.hpp"
 #include "rendering/Window.hpp"
+#include "terrain/CubeLatticeScalarField3D.hpp"
+#include "terrain/LatticeData3D.hpp"
 #include "terrain/Sphere.hpp"
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include <glm/ext/matrix_transform.hpp>
+#include <glad/gl.h>
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <cmath>
+#include <cstddef>
 #include <exception>
 #include <memory>
 #include <print>
 #include <utility>
+
+namespace
+{
+
+constexpr std::size_t LATTICE_X{ 30 };
+constexpr std::size_t LATTICE_Y{ 30 };
+constexpr std::size_t LATTICE_Z{ 30 };
+
+float computeDistanceABC(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c)
+{
+    const auto d{ (c - b) / glm::distance(c, b) };
+    const auto v{ a - b };
+    const auto t{ glm::dot(v, d) };
+    const auto p{ b + (t * d) };
+
+    return glm::distance(p, a);
+}
+
+void assignScalarField(
+    pen::LatticeData3D<float, ::LATTICE_X, ::LATTICE_Y, ::LATTICE_Z>& scalarField, const glm::vec3& center
+)
+{
+    for(std::size_t i{ 0 }; i < ::LATTICE_X; ++i)
+    {
+        for(std::size_t j{ 0 }; j < ::LATTICE_Y; ++j)
+        {
+            for(std::size_t k{ 0 }; k < ::LATTICE_Z; ++k)
+            {
+                const auto distance{ glm::vec3(
+                    static_cast<float>(i) - center[0] - (static_cast<float>(::LATTICE_X) / 2.f),
+                    static_cast<float>(j) - center[1] - (static_cast<float>(::LATTICE_Y) / 2.f),
+                    static_cast<float>(k) - center[2] - (static_cast<float>(::LATTICE_Z) / 2.f)
+                ) };
+
+                const auto distSq{ glm::length(distance) };
+                const auto perpDist{ ::computeDistanceABC(distance, glm::vec3(0.f), { 1.f, 0.f, 0.f }) };
+
+                // NOLINTBEGIN(readability-magic-numbers)
+                scalarField[{ i, j, k }]
+                    = static_cast<float>(std::max(std::exp(-0.0085f * distSq) - std::exp(-0.3f * perpDist), 0.f));
+                // NOLINTEND(readability-magic-numbers)
+            }
+        }
+    }
+}
+
+unsigned int vao{ 0 };                   // NOLINT
+std::size_t numberOfVerticesToDraw{ 0 }; // NOLINT
+
+void bufferGridDataGL(double isoLevel, pen::CubeLatticeScalarField3D<::LATTICE_X, ::LATTICE_Y, ::LATTICE_Z>& gridData)
+{
+    const auto vertices{ gridData.computeVertexDrawData(isoLevel) };
+    numberOfVerticesToDraw = vertices.size() / 6;
+
+    if(numberOfVerticesToDraw == 0)
+        return;
+
+    unsigned int vbo{ 0 };
+
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo);
+    glBindVertexArray(vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(
+        GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(sizeof(float) * vertices.size()), vertices.data(), GL_STATIC_DRAW
+    );
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, nullptr);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, reinterpret_cast<void*>(sizeof(float) * 3));
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+}
+
+void drawGrid()
+{
+    if(numberOfVerticesToDraw > 0)
+    {
+        glBindVertexArray(vao);
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(numberOfVerticesToDraw));
+    }
+}
+
+} // namespace
 
 int main()
 {
@@ -41,6 +133,16 @@ int main()
 
     const auto lightSphere{ std::make_unique<Sphere>() };
     lightSphere->copyToGPU();
+
+    LatticeData3D<float, ::LATTICE_X, ::LATTICE_Y, ::LATTICE_Z> scalarField{};
+    constexpr auto center{ glm::vec3(0.f) };
+    ::assignScalarField(scalarField, center);
+
+    constexpr auto gridSpacing{ 1.f };
+    CubeLatticeScalarField3D<::LATTICE_X, ::LATTICE_Y, ::LATTICE_Z> grid{ gridSpacing, center, scalarField };
+
+    constexpr auto isoLevel{ 0.5 };
+    ::bufferGridDataGL(isoLevel, grid);
 
     constexpr auto lightColor{ glm::vec3(1.f) };
     constexpr auto objectColor{ glm::vec3(0.99609375f, 0.80078125f, 0.31640625f) };
@@ -103,6 +205,7 @@ int main()
         marchingCubes->setMatrix4f("view", view);
 
         // TODO: Draw marching cubes here
+        ::drawGrid();
 
         auto lightingModel{ glm::mat4(1.f) };
         lightingModel = glm::translate(lightingModel, lightPos);
@@ -118,6 +221,8 @@ int main()
         GlfwContext::swapBuffers();
         GlfwContext::pollEvents();
     }
+
+    glDeleteVertexArrays(1, &vao);
 
     return 0;
 }

@@ -17,6 +17,10 @@ target_sources(
                 ./opengl/Shader.hpp
                 ./rendering/GlfwContext.hpp
                 ./rendering/Window.hpp
+                ./terrain/CubeLattice3D.hpp
+                ./terrain/CubeLatticeScalarField3D.hpp
+                ./terrain/LatticeData3D.hpp
+                ./terrain/MarchingCubesData.hpp
                 ./terrain/Sphere.hpp
                 ./utility/Assert.hpp
 )
