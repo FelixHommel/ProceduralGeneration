@@ -69,8 +69,10 @@ std::size_t numberOfVerticesToDraw{ 0 }; // NOLINT
 
 void bufferGridDataGL(double isoLevel, pen::CubeLatticeScalarField3D<::LATTICE_X, ::LATTICE_Y, ::LATTICE_Z>& gridData)
 {
+    constexpr auto VETEX_ATTRIBUTE_COUNT{ 6 };
+
     const auto vertices{ gridData.computeVertexDrawData(isoLevel) };
-    numberOfVerticesToDraw = vertices.size() / 6;
+    numberOfVerticesToDraw = vertices.size() / VETEX_ATTRIBUTE_COUNT;
 
     if(numberOfVerticesToDraw == 0)
         return;
@@ -86,10 +88,12 @@ void bufferGridDataGL(double isoLevel, pen::CubeLatticeScalarField3D<::LATTICE_X
         GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(sizeof(float) * vertices.size()), vertices.data(), GL_STATIC_DRAW
     );
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, nullptr);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * VETEX_ATTRIBUTE_COUNT, nullptr);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, reinterpret_cast<void*>(sizeof(float) * 3));
+    glVertexAttribPointer(
+        1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * VETEX_ATTRIBUTE_COUNT, reinterpret_cast<void*>(sizeof(float) * 3)
+    );
     glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
