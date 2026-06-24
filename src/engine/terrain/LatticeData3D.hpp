@@ -14,7 +14,7 @@ class LatticeData3D
 {
 public:
     LatticeData3D() : m_data{} {};
-    LatticeData3D(const std::array<T, X * Y * Z>& data) : m_data{ data } {};
+    explicit LatticeData3D(const std::array<T, X * Y * Z>& data) : m_data{ data } {};
     ~LatticeData3D() = default;
 
     LatticeData3D(const LatticeData3D&) = default;
