@@ -15,7 +15,7 @@ public:
     LatticeData3D(const std::array<T, X * Y * Z>& data) : m_data{ data } {};
     ~LatticeData3D() = default;
 
-    LatticeData3D(const LatticeData3D&) = delete;
+    LatticeData3D(const LatticeData3D&) = default;
     LatticeData3D& operator=(const LatticeData3D&) = delete;
     LatticeData3D(LatticeData3D&&) = delete;
     LatticeData3D& operator=(LatticeData3D&&) = delete;
