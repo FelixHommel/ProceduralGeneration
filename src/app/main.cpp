@@ -205,7 +205,6 @@ int main()
         marchingCubes->setMatrix4f("model", marchingCubesModel);
         marchingCubes->setMatrix4f("view", view);
 
-        // TODO: Draw marching cubes here
         ::drawGrid();
 
         auto lightingModel{ glm::mat4(1.f) };
