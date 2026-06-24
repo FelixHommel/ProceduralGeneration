@@ -35,7 +35,10 @@ public:
 protected:
     std::array<T, X * Y * Z> m_data;
 
-    std::size_t linearizeIndex(std::size_t i, std::size_t j, std::size_t k) { return (i * Y * Z) + (j * Z) + k; }
+    [[nodiscard]] std::size_t linearizeIndex(std::size_t i, std::size_t j, std::size_t k) const noexcept
+    {
+        return (i * Y * Z) + (j * Z) + k;
+    }
 };
 
 } // namespace pen
