@@ -45,9 +45,9 @@ private:
                 for(std::size_t k{ 0 }; k < Z; ++k)
                 {
                     this->value(i, j, k) = {
-                        static_cast<float>(i) * m_gridSpace + adjust,
-                        static_cast<float>(j) * m_gridSpace + adjust,
-                        static_cast<float>(k) * m_gridSpace + adjust,
+                        (static_cast<float>(i) * m_gridSpace) + adjust.x,
+                        (static_cast<float>(j) * m_gridSpace) + adjust.y,
+                        (static_cast<float>(k) * m_gridSpace) + adjust.z,
                     };
                 }
             }
