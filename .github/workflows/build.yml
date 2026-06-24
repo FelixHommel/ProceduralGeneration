@@ -98,7 +98,6 @@ jobs:
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
         -DPEN_ENABLE_ASSERTIONS=ON
         -DPEN_ENABLE_CLANG_TIDY=OFF
-        -DPEN_ENABLE_ADDRESS_SANITIZER=OFF
         -DCMAKE_C_COMPILER=gcc-14
         -DCMAKE_CXX_COMPILER=g++-14
 
