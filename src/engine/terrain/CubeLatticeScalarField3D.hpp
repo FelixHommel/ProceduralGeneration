@@ -21,7 +21,7 @@ public:
     Triangle() : m_vertices{} {}
     Triangle(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3) : m_vertices{ p1, p2, p3 } {}
     Triangle(const std::array<glm::vec3, 3>& points) : m_vertices{ points } {}
-    ~Triangle();
+    ~Triangle() = default;
 
     Triangle(const Triangle&) = default;
     Triangle& operator=(const Triangle&) = default;
