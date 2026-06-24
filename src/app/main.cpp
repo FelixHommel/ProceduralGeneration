@@ -200,23 +200,18 @@ int main()
 
         const auto marchingCubesModel{ glm::mat4(1.f) };
 
-        marchingCubes->use();
-        marchingCubes->setVector3f("lightPos", lightPos);
+        marchingCubes->setVector3f("lightPos", lightPos, true);
         marchingCubes->setVector3f("lightColor", lightColor);
         marchingCubes->setVector3f("objectColor", objectColor);
-        marchingCubes->setVector3f("viewPos", viewPos);
-
         marchingCubes->setMatrix4f("model", marchingCubesModel);
         marchingCubes->setMatrix4f("view", view);
+        marchingCubes->setVector3f("viewPos", viewPos);
 
         ::drawGrid();
 
-        auto lightingModel{ glm::mat4(1.f) };
-        lightingModel = glm::translate(lightingModel, lightPos);
+        const auto lightingModel{ glm::translate(glm::mat4(1.f), lightPos) };
 
-        lighting->use();
-        lighting->setVector3f("lightColor", lightColor);
-
+        lighting->setVector3f("lightColor", lightColor, true);
         lighting->setMatrix4f("model", lightingModel);
         lighting->setMatrix4f("view", view);
 
