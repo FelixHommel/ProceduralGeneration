@@ -2,7 +2,12 @@ set(NAME "ProceduralGenerationTests")
 
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
-add_executable(${NAME} ./testMain.cpp ./opengl/ShaderTest.cpp)
+add_executable(
+    ${NAME}
+    ./testMain.cpp
+    ./opengl/ShaderTest.cpp
+    ./terrain/SphereTest.cpp
+)
 
 target_sources(
     ${NAME}
