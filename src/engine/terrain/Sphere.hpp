@@ -24,6 +24,13 @@ constexpr auto INTERLEAVED_STRIDE{ 32 };
 namespace pen
 {
 
+namespace testing
+{
+
+class SphereTest;
+
+} // namespace testing
+
 /// \brief
 ///
 /// \author Felix Hommel
@@ -95,6 +102,8 @@ private:
     void buildInterleavedVertices();
 
     void addIndices(const Index& index);
+
+    friend class pen::testing::SphereTest;
 };
 
 } // namespace pen
