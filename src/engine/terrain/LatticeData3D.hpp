@@ -16,9 +16,9 @@ public:
     LatticeData3D() : m_data{} {};
     ~LatticeData3D() = default;
 
-    LatticeData3D(const LatticeData3D&) = default;
+    LatticeData3D(const LatticeData3D& other) = default;
     LatticeData3D& operator=(const LatticeData3D&) = delete;
-    LatticeData3D(LatticeData3D&&) = delete;
+    LatticeData3D(LatticeData3D&& other) noexcept = default;
     LatticeData3D& operator=(LatticeData3D&&) = delete;
 
     T& operator[](std::size_t index) { return m_data[index]; }
