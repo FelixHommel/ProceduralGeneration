@@ -55,9 +55,14 @@ Sphere::Sphere(float radius, unsigned int sectorCount, unsigned int stackCount, 
 
 Sphere::~Sphere()
 {
-    glDeleteVertexArrays(1, &m_vao);
-    glDeleteBuffers(1, &m_vbo);
-    glDeleteBuffers(1, &m_ebo);
+    if(m_vao != 0)
+        glDeleteVertexArrays(1, &m_vao);
+
+    if(m_vbo != 0)
+        glDeleteBuffers(1, &m_vbo);
+
+    if(m_ebo != 0)
+        glDeleteBuffers(1, &m_ebo);
 }
 
 void Sphere::draw() const
