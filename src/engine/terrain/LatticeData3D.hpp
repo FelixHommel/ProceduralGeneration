@@ -24,7 +24,12 @@ public:
     T& operator[](std::size_t index) { return m_data[index]; }
     const T& operator[](std::size_t index) const { return m_data[index]; }
 
-    T& operator[](const std::array<std::size_t, 3>& ijk) { return m_data[linearizeIndex(ijk[0], ijk[1], ijk[2])]; }
+    T& operator[](const glm::ivec3& ijk)
+    {
+        return m_data[linearizeIndex(
+            static_cast<std::size_t>(ijk.x), static_cast<std::size_t>(ijk.y), static_cast<std::size_t>(ijk.z)
+        )];
+    }
     const T& operator[](const glm::ivec3& ijk) const
     {
         return m_data[linearizeIndex(
