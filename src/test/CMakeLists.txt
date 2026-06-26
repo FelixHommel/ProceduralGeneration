@@ -7,6 +7,7 @@ add_executable(
     ./testMain.cpp
     ./opengl/ShaderTest.cpp
     ./terrain/CubeLattice3DTest.cpp
+    ./terrain/CubeLatticeScalarFirld3DTest.cpp
     ./terrain/LatticeData3DTest.cpp
     ./terrain/SphereTest.cpp
 )
