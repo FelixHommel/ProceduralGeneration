@@ -182,23 +182,22 @@ private:
 
     glm::vec3 interpolateVertex(double isoLevel, const glm::ivec3& vert1, const glm::ivec3& vert2)
     {
+        constexpr auto DELTA{ 0.00001f };
+
         const auto& p1{ m_cubeLattice[vert1] };
         const auto& p2{ m_cubeLattice[vert2] };
 
         const auto val1{ m_scalarField[vert1] };
         const auto val2{ m_scalarField[vert2] };
 
-        double mu{ 0.0 };
-        constexpr auto delta{ 0.00001f };
-
-        if(std::abs(isoLevel - val1) < delta)
+        if(std::abs(isoLevel - val1) < DELTA)
             return p1;
-        if(std::abs(isoLevel - val2) < delta)
+        if(std::abs(isoLevel - val2) < DELTA)
             return p2;
-        if(std::abs(val1 - val2) < delta)
+        if(std::abs(val1 - val2) < DELTA)
             return p1;
 
-        mu = (isoLevel - val1) / (val2 - val1);
+        const double mu{ (isoLevel - val1) / (val2 - val1) };
 
         return { static_cast<float>(p1[0] + (mu * (p2[0] - p1[0]))),
                  static_cast<float>(p1[1] + (mu * (p2[1] - p1[1]))),
