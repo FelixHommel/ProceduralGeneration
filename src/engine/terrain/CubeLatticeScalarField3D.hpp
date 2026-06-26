@@ -4,6 +4,7 @@
 #include "terrain/CubeLattice3D.hpp"
 #include "terrain/LatticeData3D.hpp"
 #include "terrain/MarchingCubesData.hpp"
+#include "utility/Assert.hpp"
 
 #include <glm/glm.hpp>
 
@@ -175,7 +176,7 @@ private:
         case 7:
             return { i, j + 1, k };
         default:
-            return {};
+            PEN_ASSERT(false, "Vertex index is out of bounds");
         }
         // NOLINTEND(readability-magic-numbers)
     }
