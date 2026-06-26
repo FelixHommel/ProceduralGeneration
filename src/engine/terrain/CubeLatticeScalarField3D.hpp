@@ -133,7 +133,7 @@ private:
         std::array<glm::vec3, 12> vertList{}; // NOLINT(readability-magic-numbers)
         for(std::size_t edge{ 0 }; edge < EDGE_CORNERS.size(); ++edge)
         {
-            if((edgeMask & (1u << edge)) == 0)
+            if((edgeMask & (1u << edge)) != 0u)
                 continue;
 
             const auto& corner{ EDGE_CORNERS.at(edge) };
