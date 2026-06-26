@@ -72,10 +72,9 @@ TEST(CubeLatticeScalarField3DEmptyOutput, AllBelowIsoLevelProducesEmptyOutput)
 TEST(CubeLatticeScalarField3DEmptyOutput, AllAboveIsoLevelProducesEmptyOutput)
 {
     constexpr std::size_t N{ 20 };
-    constexpr auto RADIUS{ 7.f };
 
     LatticeData3D<float, N, N, N> field;
-    fillSphereDensity(field, RADIUS);
+    fillConstant(field, 1.f);
 
     CubeLatticeScalarField3D<N, N, N> sdf(1.f, glm::vec3(0.f), field);
 
@@ -166,8 +165,8 @@ TEST(CubeLatticeScalarField3DNormals, StoredNormalsMatchGeometricNormals)
         };
 
         const auto p0{ readVertex(0) };
-        const auto p1{ readVertex(TRIANGLE_STRIDE) };
-        const auto p2{ readVertex(TRIANGLE_STRIDE * 2) };
+        const auto p1{ readVertex(STRIDE) };
+        const auto p2{ readVertex(STRIDE * 2) };
 
         const auto edge1{ p1 - p0 };
         const auto edge2{ p2 - p0 };
@@ -181,7 +180,7 @@ TEST(CubeLatticeScalarField3DNormals, StoredNormalsMatchGeometricNormals)
 
         for(std::size_t v{ 0 }; v < 3; ++v)
         {
-            const auto storedNormal{ readVertex((TRIANGLE_STRIDE * v) + 3) };
+            const auto storedNormal{ readVertex((STRIDE * v) + 3) };
 
             EXPECT_NEAR(storedNormal.x, geometricNormal.x, ::DELTA) << "triangle " << (tri / TRIANGLE_STRIDE);
             EXPECT_NEAR(storedNormal.y, geometricNormal.y, ::DELTA) << "triangle " << (tri / TRIANGLE_STRIDE);
