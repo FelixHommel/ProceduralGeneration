@@ -33,9 +33,9 @@ private:
     void computeLatticeVertices()
     {
         const auto adjust{ glm::vec3(
-            (m_gridSpace * static_cast<float>(X - 1) / 2.f) + m_center.x,
-            (m_gridSpace * static_cast<float>(Y - 1) / 2.f) + m_center.y,
-            (m_gridSpace * static_cast<float>(Z - 1) / 2.f) + m_center.z
+            (-m_gridSpace * static_cast<float>(X - 1) / 2.f) + m_center.x,
+            (-m_gridSpace * static_cast<float>(Y - 1) / 2.f) + m_center.y,
+            (-m_gridSpace * static_cast<float>(Z - 1) / 2.f) + m_center.z
         ) };
 
         for(std::size_t i{ 0 }; i < X; ++i)
