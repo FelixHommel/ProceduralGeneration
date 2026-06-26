@@ -5,9 +5,9 @@
 #include "terrain/LatticeData3D.hpp"
 #include "terrain/MarchingCubesData.hpp"
 
-#include <array>
 #include <glm/glm.hpp>
 
+#include <array>
 #include <cstddef>
 #include <utility>
 #include <vector>
