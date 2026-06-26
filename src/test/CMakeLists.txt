@@ -6,6 +6,7 @@ add_executable(
     ${NAME}
     ./testMain.cpp
     ./opengl/ShaderTest.cpp
+    ./terrain/CubeLattice3DTest.cpp
     ./terrain/LatticeData3DTest.cpp
     ./terrain/SphereTest.cpp
 )
