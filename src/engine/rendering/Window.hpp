@@ -47,6 +47,21 @@ public:
 
     [[nodiscard]] bool shouldClose() const noexcept { return glfwWindowShouldClose(m_window) == GLFW_TRUE; }
     [[nodiscard]] Viewport viewport() const noexcept { return m_viewport; }
+    [[nodiscard]] GLFWwindow* handle() const noexcept { return m_window; }
+
+    /// \brief Set the window user pointer.
+    ///
+    /// \param pUserPointer Pointer to object that is registered as window user pointer.
+    void setWindowUserPointer(void* pUserPointer) { glfwSetWindowUserPointer(m_window, pUserPointer); }
+    void setViewport(int newWidth, int newHeight);
+
+    void registerWindowResizeCallback(GLFWframebuffersizefun callback)
+    {
+        glfwSetFramebufferSizeCallback(m_window, callback);
+    }
+    void registerKeyboardCallback(GLFWkeyfun callback) { glfwSetKeyCallback(m_window, callback); }
+    void registerCursorPosCallback(GLFWcursorposfun callback) { glfwSetCursorPosCallback(m_window, callback); }
+    void registerScrollCallback(GLFWscrollfun callback) { glfwSetScrollCallback(m_window, callback); }
 
 private:
     static constexpr auto CONTEXT_VERSION_MAJ{ 3 };

@@ -35,7 +35,6 @@ Window::Window(const std::string& title, int width, int height) : m_viewport{ .w
     }
 
     glfwMakeContextCurrent(m_window);
-    glfwSetWindowUserPointer(m_window, this);
 
     // NOTE: Maybe want to extract into separate GLAD context later.
     if(gladLoadGL(glfwGetProcAddress) == 0)
@@ -46,13 +45,6 @@ Window::Window(const std::string& title, int width, int height) : m_viewport{ .w
     }
 
     glViewport(0, 0, m_viewport.width, m_viewport.height);
-
-    glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height) {
-        auto* self{ static_cast<Window*>(glfwGetWindowUserPointer(window)) };
-
-        self->m_viewport = { .width = width, .height = height };
-        glViewport(0, 0, self->m_viewport.width, self->m_viewport.height);
-    });
 }
 
 Window::~Window()
@@ -75,6 +67,12 @@ Window& Window::operator=(Window&& other) noexcept
     m_viewport = std::exchange(other.m_viewport, {});
 
     return *this;
+}
+
+void Window::setViewport(int newWidth, int newHeight)
+{
+    m_viewport = { .width = newWidth, .height = newHeight };
+    glViewport(0, 0, m_viewport.width, m_viewport.height);
 }
 
 /// \brief Destroy the window if it is valid.
