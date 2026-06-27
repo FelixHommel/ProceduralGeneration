@@ -35,7 +35,7 @@ public:
     Application(Application&&) = delete;
     Application& operator=(Application&&) = delete;
 
-    void renderLoop();
+    void start();
 
 private:
     using LatticeData = LatticeData3D<float, ::LATTICE_X, ::LATTICE_Y, ::LATTICE_Z>;

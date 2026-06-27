@@ -21,7 +21,7 @@ int main()
         return 0;
     }
 
-    app->renderLoop();
+    app->start();
 
     return 0;
 }

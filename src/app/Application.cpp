@@ -77,7 +77,7 @@ Application::~Application()
     glDeleteVertexArrays(1, &vao);
 }
 
-void Application::renderLoop()
+void Application::start()
 {
     const auto windowSize{ window->viewport() };
     const auto projection{ glm::perspective(
