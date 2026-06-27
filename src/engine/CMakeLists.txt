@@ -7,6 +7,7 @@ add_library(
     ./rendering/GlfwContext.cpp
     ./rendering/Window.cpp
     ./terrain/Sphere.cpp
+    ./utility/Camera.cpp
 )
 
 target_sources(
@@ -23,6 +24,7 @@ target_sources(
                 ./terrain/MarchingCubesData.hpp
                 ./terrain/Sphere.hpp
                 ./utility/Assert.hpp
+                ./utility/Camera.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
