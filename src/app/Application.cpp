@@ -63,12 +63,12 @@ Application::Application()
       ) }
     , lightSphere{ std::make_unique<Sphere>() }
 {
-    scalarField = std::make_unique<LatticeData>();
-    grid = std::make_unique<ScalarField>(gridSpacing, center, *scalarField);
-
     lightSphere->copyToGPU();
 
+    scalarField = std::make_unique<LatticeData>();
     assignScalarField(center);
+    grid = std::make_unique<ScalarField>(gridSpacing, center, *scalarField);
+
     bufferGridDataGL(isoLevel);
 }
 
