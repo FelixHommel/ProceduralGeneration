@@ -7,6 +7,7 @@
 #include "terrain/CubeLatticeScalarField3D.hpp"
 #include "terrain/LatticeData3D.hpp"
 #include "terrain/Sphere.hpp"
+#include "utility/Camera.hpp"
 
 #include <glm/glm.hpp>
 
@@ -53,12 +54,19 @@ private:
     std::unique_ptr<Sphere> m_lightSphere;
     std::unique_ptr<LatticeData> m_scalarField;
     std::unique_ptr<ScalarField> m_grid;
+    std::unique_ptr<Camera> m_camera;
 
     unsigned int m_vao{ 0 };
     std::size_t m_numberOfVerticesToDraw{ 0 };
 
-    void update();
+    bool m_firstMouse{ true };
+    float m_lastMouseX{ 0 };
+    float m_lastMouseY{ 0 };
+
+    void update(float deltaTime);
     void render() const;
+
+    void processInput(GLFWwindow* window, float deltaTime);
 
     void assignScalarField(const glm::vec3& center = glm::vec3(0.f));
     void bufferGridDataGL(double isoLevel);

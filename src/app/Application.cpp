@@ -4,6 +4,7 @@
 #include "rendering/GlfwContext.hpp"
 #include "rendering/Window.hpp"
 #include "terrain/Sphere.hpp"
+#include "utility/Camera.hpp"
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -11,7 +12,6 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
-#include <spdlog/spdlog.h>
 
 #include <algorithm>
 #include <cmath>
@@ -62,7 +62,40 @@ Application::Application()
           PEN_ROOT "resources/shaders/LightSource.vert", PEN_ROOT "resources/shaders/LightSource.frag"
       ) }
     , m_lightSphere{ std::make_unique<Sphere>() }
+    , m_camera{ std::make_unique<Camera>() }
 {
+    m_window->setWindowUserPointer(this);
+    m_window->registerWindowResizeCallback([](GLFWwindow* window, int width, int height) {
+        auto* self{ reinterpret_cast<Application*>(glfwGetWindowUserPointer(window)) };
+        self->m_window->setViewport(width, height);
+    });
+    m_window->registerCursorPosCallback([](GLFWwindow* window, double posXIn, double posYIn) {
+        auto* self{ reinterpret_cast<Application*>(glfwGetWindowUserPointer(window)) };
+
+        float posX{ static_cast<float>(posXIn) };
+        float posY{ static_cast<float>(posYIn) };
+
+        if(self->m_firstMouse)
+        {
+            self->m_lastMouseX = posX;
+            self->m_lastMouseY = posY;
+            self->m_firstMouse = false;
+        }
+
+        float offsetX{ posX - self->m_lastMouseX };
+        float offsetY{ posY - self->m_lastMouseY };
+
+        self->m_lastMouseX = posX;
+        self->m_lastMouseY = posY;
+
+        self->m_camera->processMouseMovement(offsetX, offsetY);
+    });
+    m_window->registerScrollCallback([](GLFWwindow* window, double, double offsetY) {
+        auto* self{ static_cast<Application*>(glfwGetWindowUserPointer(window)) };
+
+        self->m_camera->porocessMouseScroll(static_cast<float>(offsetY));
+    });
+
     m_lightSphere->copyToGPU();
 
     m_scalarField = std::make_unique<LatticeData>();
@@ -79,22 +112,17 @@ Application::~Application()
 
 void Application::start()
 {
-    const auto windowSize{ m_window->viewport() };
-    const auto projection{ glm::perspective(
-        glm::radians(45.f), static_cast<float>(windowSize.width) / static_cast<float>(windowSize.height), 0.1f, 100.f
-    ) };
-
-    m_marchingCubesShader->use();
-    m_marchingCubesShader->setMatrix4f("projection", projection);
-
-    m_lightingShader->use();
-    m_lightingShader->setMatrix4f("projection", projection);
-
+    float deltaTime{ 0.f };
+    float lastTime{ 0.f };
     while(!m_window->shouldClose())
     {
+        float currentTime{ static_cast<float>(glfwGetTime()) };
+        deltaTime = currentTime - lastTime;
+        lastTime = currentTime;
+
         GlfwContext::clear();
 
-        update();
+        update(deltaTime);
         render();
 
         GlfwContext::swapBuffers();
@@ -103,33 +131,26 @@ void Application::start()
 }
 
 /// \brief Update the interactive systems.
-void Application::update() {}
+void Application::update(float deltaTime)
+{
+    processInput(m_window->handle(), deltaTime);
+}
 
 /// \brief Render the scene to the screen.
 void Application::render() const
 {
-    auto viewPos{ glm::vec3(0.f) };
-    auto lightPos{ glm::vec3(0.f) };
+    const auto windowSize{ m_window->viewport() };
+    const auto projection{ glm::perspective(
+        glm::radians(m_camera->zoom()),
+        static_cast<float>(windowSize.width) / static_cast<float>(windowSize.height),
+        0.1f,
+        100.f
+    ) };
 
-    if constexpr(movingScene)
-    {
-        const auto lightX{ static_cast<float>(std::sin(lightRotationMod * glfwGetTime()) * lightPosRadius) };
-        const auto lightZ{ static_cast<float>(std::cos(lightRotationMod * glfwGetTime()) * lightPosRadius) };
-        const auto cameraX{ static_cast<float>(std::sin(cameraRotationMod * glfwGetTime()) * cameraRotateRadius) };
-        const auto cameraZ{ static_cast<float>(std::cos(cameraRotationMod * glfwGetTime()) * cameraRotateRadius) };
+    const auto view{ m_camera->viewMatrix() };
+    const auto viewPos{ m_camera->position() };
 
-        viewPos = glm::vec3(cameraX, cameraY, cameraZ);
-        lightPos = glm::vec3(lightX, 0.f, lightZ);
-    }
-    else
-    {
-        viewPos = glm::vec3(-1.f, cameraY, -1.f);
-        lightPos = glm::vec3(0.f);
-    }
-
-    auto view{ glm::mat4(1.f) };
-    view = glm::lookAt(viewPos, glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
-
+    const auto lightPos{ glm::vec3(0.f) };
     const auto marchingCubesModel{ glm::mat4(1.f) };
 
     m_marchingCubesShader->setVector3f("lightPos", lightPos, true);
@@ -137,6 +158,7 @@ void Application::render() const
     m_marchingCubesShader->setVector3f("objectColor", objectColor);
     m_marchingCubesShader->setMatrix4f("model", marchingCubesModel);
     m_marchingCubesShader->setMatrix4f("view", view);
+    m_marchingCubesShader->setMatrix4f("projection", projection);
     m_marchingCubesShader->setVector3f("viewPos", viewPos);
 
     if(m_numberOfVerticesToDraw > 0)
@@ -150,8 +172,45 @@ void Application::render() const
     m_lightingShader->setVector3f("lightColor", lightColor, true);
     m_lightingShader->setMatrix4f("model", lightingModel);
     m_lightingShader->setMatrix4f("view", view);
+    m_lightingShader->setMatrix4f("projection", projection);
 
     m_lightSphere->draw();
+}
+
+void Application::processInput(GLFWwindow* window, float deltaTime)
+{
+    if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        m_camera->processKeyboard(Camera::CameraMovement::FORWARD, deltaTime);
+    else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        m_camera->processKeyboard(Camera::CameraMovement::BACKWARD, deltaTime);
+
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        m_camera->processKeyboard(Camera::CameraMovement::LEFT, deltaTime);
+    else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        m_camera->processKeyboard(Camera::CameraMovement::RIGHT, deltaTime);
+
+    if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        m_camera->processKeyboard(Camera::CameraMovement::UP, deltaTime);
+    else if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        m_camera->processKeyboard(Camera::CameraMovement::DOWN, deltaTime);
+
+    if(glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    if(glfwGetKey(window, GLFW_KEY_N) == GLFW_PRESS)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        m_camera->processKeyboard(Camera::CameraMovement::PITCH_UP, deltaTime);
+    else if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        m_camera->processKeyboard(Camera::CameraMovement::PITCH_DOWN, deltaTime);
+
+    if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+        m_camera->processKeyboard(Camera::CameraMovement::YAW_RIGHT, deltaTime);
+    else if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+        m_camera->processKeyboard(Camera::CameraMovement::YAW_LEFT, deltaTime);
 }
 
 /// \brief Initialize the scalar field
@@ -191,7 +250,6 @@ void Application::bufferGridDataGL(double isoLevel)
     constexpr auto VETEX_ATTRIBUTE_COUNT{ 6 };
 
     const auto vertices{ m_grid->computeVertexDrawData(isoLevel) };
-    spdlog::info("vertices: {}", vertices.size());
     m_numberOfVerticesToDraw = vertices.size() / VETEX_ATTRIBUTE_COUNT;
 
     if(m_numberOfVerticesToDraw == 0)
