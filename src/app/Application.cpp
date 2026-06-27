@@ -62,6 +62,7 @@ Application::Application()
           PEN_ROOT "resources/shaders/LightSource.vert", PEN_ROOT "resources/shaders/LightSource.frag"
       ) }
     , m_lightSphere{ std::make_unique<Sphere>() }
+    , m_scalarField{ std::make_unique<LatticeData>() }
     , m_camera{ std::make_unique<Camera>() }
 {
     m_window->setWindowUserPointer(this);
@@ -98,7 +99,6 @@ Application::Application()
 
     m_lightSphere->copyToGPU();
 
-    m_scalarField = std::make_unique<LatticeData>();
     assignScalarField(center);
     m_grid = std::make_unique<ScalarField>(gridSpacing, center, *m_scalarField);
 
