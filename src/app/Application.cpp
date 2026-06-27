@@ -4,7 +4,6 @@
 #include "rendering/GlfwContext.hpp"
 #include "rendering/Window.hpp"
 #include "terrain/Sphere.hpp"
-#include <spdlog/spdlog.h>
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -12,6 +11,7 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
+#include <spdlog/spdlog.h>
 
 #include <algorithm>
 #include <cmath>
