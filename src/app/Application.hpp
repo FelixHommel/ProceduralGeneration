@@ -46,23 +46,22 @@ private:
     using LatticeData = LatticeData3D<float, ::LATTICE_X, ::LATTICE_Y, ::LATTICE_Z>;
     using ScalarField = CubeLatticeScalarField3D<::LATTICE_X, ::LATTICE_Y, ::LATTICE_Z>;
 
-    std::unique_ptr<GlfwContext> glfw;
-    std::unique_ptr<Window> window;
-    std::unique_ptr<Shader> marchingCubes;
-    std::unique_ptr<Shader> lighting;
-    std::unique_ptr<Sphere> lightSphere;
-    std::unique_ptr<LatticeData> scalarField;
-    std::unique_ptr<ScalarField> grid;
+    std::unique_ptr<GlfwContext> m_glfw;
+    std::unique_ptr<Window> m_window;
+    std::unique_ptr<Shader> m_marchingCubesShader;
+    std::unique_ptr<Shader> m_lightingShader;
+    std::unique_ptr<Sphere> m_lightSphere;
+    std::unique_ptr<LatticeData> m_scalarField;
+    std::unique_ptr<ScalarField> m_grid;
 
-    unsigned int vao{ 0 };
-    std::size_t numberOfVerticesToDraw{ 0 };
+    unsigned int m_vao{ 0 };
+    std::size_t m_numberOfVerticesToDraw{ 0 };
 
     void update();
     void render() const;
 
     void assignScalarField(const glm::vec3& center = glm::vec3(0.f));
     void bufferGridDataGL(double isoLevel);
-    void drawGrid() const;
 };
 
 } // namespace pen::app

@@ -53,44 +53,44 @@ namespace pen::app
 {
 
 Application::Application()
-    : glfw{ std::make_unique<GlfwContext>() }
-    , window{ std::make_unique<Window>("ProceduralGeneration") }
-    , marchingCubes{ Shader::loadFromFile(
+    : m_glfw{ std::make_unique<GlfwContext>() }
+    , m_window{ std::make_unique<Window>("ProceduralGeneration") }
+    , m_marchingCubesShader{ Shader::loadFromFile(
           PEN_ROOT "resources/shaders/MarchingCubes.vert", PEN_ROOT "resources/shaders/MarchingCubes.frag"
       ) }
-    , lighting{ Shader::loadFromFile(
+    , m_lightingShader{ Shader::loadFromFile(
           PEN_ROOT "resources/shaders/LightSource.vert", PEN_ROOT "resources/shaders/LightSource.frag"
       ) }
-    , lightSphere{ std::make_unique<Sphere>() }
+    , m_lightSphere{ std::make_unique<Sphere>() }
 {
-    lightSphere->copyToGPU();
+    m_lightSphere->copyToGPU();
 
-    scalarField = std::make_unique<LatticeData>();
+    m_scalarField = std::make_unique<LatticeData>();
     assignScalarField(center);
-    grid = std::make_unique<ScalarField>(gridSpacing, center, *scalarField);
+    m_grid = std::make_unique<ScalarField>(gridSpacing, center, *m_scalarField);
 
     bufferGridDataGL(isoLevel);
 }
 
 Application::~Application()
 {
-    glDeleteVertexArrays(1, &vao);
+    glDeleteVertexArrays(1, &m_vao);
 }
 
 void Application::start()
 {
-    const auto windowSize{ window->viewport() };
+    const auto windowSize{ m_window->viewport() };
     const auto projection{ glm::perspective(
         glm::radians(45.f), static_cast<float>(windowSize.width) / static_cast<float>(windowSize.height), 0.1f, 100.f
     ) };
 
-    marchingCubes->use();
-    marchingCubes->setMatrix4f("projection", projection);
+    m_marchingCubesShader->use();
+    m_marchingCubesShader->setMatrix4f("projection", projection);
 
-    lighting->use();
-    lighting->setMatrix4f("projection", projection);
+    m_lightingShader->use();
+    m_lightingShader->setMatrix4f("projection", projection);
 
-    while(!window->shouldClose())
+    while(!m_window->shouldClose())
     {
         GlfwContext::clear();
 
@@ -132,22 +132,26 @@ void Application::render() const
 
     const auto marchingCubesModel{ glm::mat4(1.f) };
 
-    marchingCubes->setVector3f("lightPos", lightPos, true);
-    marchingCubes->setVector3f("lightColor", lightColor);
-    marchingCubes->setVector3f("objectColor", objectColor);
-    marchingCubes->setMatrix4f("model", marchingCubesModel);
-    marchingCubes->setMatrix4f("view", view);
-    marchingCubes->setVector3f("viewPos", viewPos);
+    m_marchingCubesShader->setVector3f("lightPos", lightPos, true);
+    m_marchingCubesShader->setVector3f("lightColor", lightColor);
+    m_marchingCubesShader->setVector3f("objectColor", objectColor);
+    m_marchingCubesShader->setMatrix4f("model", marchingCubesModel);
+    m_marchingCubesShader->setMatrix4f("view", view);
+    m_marchingCubesShader->setVector3f("viewPos", viewPos);
 
-    drawGrid();
+    if(m_numberOfVerticesToDraw > 0)
+    {
+        glBindVertexArray(m_vao);
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(m_numberOfVerticesToDraw));
+    }
 
     const auto lightingModel{ glm::translate(glm::mat4(1.f), lightPos) };
 
-    lighting->setVector3f("lightColor", lightColor, true);
-    lighting->setMatrix4f("model", lightingModel);
-    lighting->setMatrix4f("view", view);
+    m_lightingShader->setVector3f("lightColor", lightColor, true);
+    m_lightingShader->setMatrix4f("model", lightingModel);
+    m_lightingShader->setMatrix4f("view", view);
 
-    lightSphere->draw();
+    m_lightSphere->draw();
 }
 
 /// \brief Initialize the scalar field
@@ -171,7 +175,7 @@ void Application::assignScalarField(const glm::vec3& center)
                 const auto perpDist{ ::computeDistanceABC(distance, glm::vec3(0.f), { 1.f, 0.f, 0.f }) };
 
                 // NOLINTBEGIN(readability-magic-numbers)
-                (*scalarField)[{ i, j, k }]
+                (*m_scalarField)[{ i, j, k }]
                     = static_cast<float>(std::max(std::exp(-0.0085f * distSq) - std::exp(-0.3f * perpDist), 0.f));
                 // NOLINTEND(readability-magic-numbers)
             }
@@ -186,18 +190,18 @@ void Application::bufferGridDataGL(double isoLevel)
 {
     constexpr auto VETEX_ATTRIBUTE_COUNT{ 6 };
 
-    const auto vertices{ grid->computeVertexDrawData(isoLevel) };
+    const auto vertices{ m_grid->computeVertexDrawData(isoLevel) };
     spdlog::info("vertices: {}", vertices.size());
-    numberOfVerticesToDraw = vertices.size() / VETEX_ATTRIBUTE_COUNT;
+    m_numberOfVerticesToDraw = vertices.size() / VETEX_ATTRIBUTE_COUNT;
 
-    if(numberOfVerticesToDraw == 0)
+    if(m_numberOfVerticesToDraw == 0)
         return;
 
     unsigned int vbo{ 0 };
 
-    glGenVertexArrays(1, &vao);
+    glGenVertexArrays(1, &m_vao);
     glGenBuffers(1, &vbo);
-    glBindVertexArray(vao);
+    glBindVertexArray(m_vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(
@@ -214,15 +218,6 @@ void Application::bufferGridDataGL(double isoLevel)
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-}
-
-void Application::drawGrid() const
-{
-    if(numberOfVerticesToDraw > 0)
-    {
-        glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(numberOfVerticesToDraw));
-    }
 }
 
 } // namespace pen::app
