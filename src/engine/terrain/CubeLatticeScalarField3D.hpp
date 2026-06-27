@@ -49,7 +49,7 @@ class CubeLatticeScalarField3D
 public:
     CubeLatticeScalarField3D(float spacing, const glm::vec3& center) : m_cubeLattice{ spacing, center }, m_scalarField{}
     {}
-    CubeLatticeScalarField3D(float spacing, const glm::vec3& center, LatticeData3D<float, X, Y, Z>& scalarField)
+    CubeLatticeScalarField3D(float spacing, const glm::vec3& center, const LatticeData3D<float, X, Y, Z>& scalarField)
         : m_cubeLattice{ spacing, center }, m_scalarField{ scalarField }
     {}
     ~CubeLatticeScalarField3D() = default;
