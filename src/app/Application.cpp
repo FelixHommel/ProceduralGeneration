@@ -102,8 +102,11 @@ void Application::start()
     }
 }
 
+/// \brief Update the interactive systems.
 void Application::update() {}
-void Application::render()
+
+/// \brief Render the scene to the screen.
+void Application::render() const
 {
     auto viewPos{ glm::vec3(0.f) };
     auto lightPos{ glm::vec3(0.f) };
@@ -147,6 +150,9 @@ void Application::render()
     lightSphere->draw();
 }
 
+/// \brief Initialize the scalar field
+///
+/// \param center (optional) Where the center of the field is
 void Application::assignScalarField(const glm::vec3& center)
 {
     for(std::size_t i{ 0 }; i < ::LATTICE_X; ++i)
@@ -173,6 +179,9 @@ void Application::assignScalarField(const glm::vec3& center)
     }
 }
 
+/// \brief Upload the vertex data to the GPU.
+///
+/// \param isoLevel how detailed to mesh is.
 void Application::bufferGridDataGL(double isoLevel)
 {
     constexpr auto VETEX_ATTRIBUTE_COUNT{ 6 };

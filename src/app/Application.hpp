@@ -24,6 +24,10 @@ constexpr std::size_t LATTICE_Z{ 30 };
 namespace pen::app
 {
 
+/// \brief The \ref Application is the orchestrator of the program flow.
+///
+/// \author Felix Hommel
+/// \date 6/26/2026
 class Application
 {
 public:
@@ -35,6 +39,7 @@ public:
     Application(Application&&) = delete;
     Application& operator=(Application&&) = delete;
 
+    /// \brief Start the application.
     void start();
 
 private:
@@ -53,7 +58,7 @@ private:
     std::size_t numberOfVerticesToDraw{ 0 };
 
     void update();
-    void render();
+    void render() const;
 
     void assignScalarField(const glm::vec3& center = glm::vec3(0.f));
     void bufferGridDataGL(double isoLevel);
