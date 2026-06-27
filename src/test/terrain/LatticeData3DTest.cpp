@@ -4,6 +4,7 @@
 #include "testUtility/RandomNumberGenerator.hpp"
 
 #include <cstddef>
+#include <memory>
 
 namespace
 {
@@ -282,6 +283,29 @@ TEST(LatticeData3DConstruction, DefaultConstructedIsZero)
 
     for(std::size_t i{ 0 }; i < X * Y * Z; ++i)
         EXPECT_EQ(lattice[i], 0);
+}
+
+/// \brief Default-constructed lattice must hold the zero-value for its type.
+TEST(LatticeData3DConstruction, CopyConstructionProducesExactCopy)
+{
+    constexpr std::size_t X{ 3 };
+    constexpr std::size_t Y{ 4 };
+    constexpr std::size_t Z{ 5 };
+
+    std::unique_ptr<LatticeData3D<int, X, Y, Z>> lattice{ std::make_unique<LatticeData3D<int, X, Y, Z>>() };
+
+    for(std::size_t i{ 0 }; i < X; ++i)
+        for(std::size_t j{ 0 }; j < Y; ++j)
+            for(std::size_t k{ 0 }; k < Z; ++k)
+                lattice->value(i, j, k) = static_cast<int>((i * Y * Z) + (j * Z) + k);
+
+    LatticeData3D<int, X, Y, Z> latticeCopy{ *lattice };
+    lattice.reset(nullptr);
+
+    for(std::size_t i{ 0 }; i < X; ++i)
+        for(std::size_t j{ 0 }; j < Y; ++j)
+            for(std::size_t k{ 0 }; k < Z; ++k)
+                EXPECT_EQ(latticeCopy.value(i, j, k), static_cast<int>((i * Y * Z) + (j * Z) + k));
 }
 
 } // namespace pen::testing
