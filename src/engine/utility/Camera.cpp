@@ -54,24 +54,22 @@ void Camera::processKeyboard(CameraMovement direction, float dt)
 
 void Camera::processMouseMovement(float offsetX, float offsetY, bool constrainPitch)
 {
-    // NOTE: I would prefer this to be turned into a keyboard only system; no movement with mouse
-    //
-    // offsetX *= m_mouseSensitivity;
-    // offsetY *= m_mouseSensitivity;
-    //
-    // m_yaw += offsetX;
-    // m_pitch += offsetY;
-    //
-    // if(constrainPitch)
-    // {
-    //     if(m_pitch > ::PITCH_CONSTRAIN)
-    //         m_pitch = ::PITCH_CONSTRAIN;
-    //
-    //     if(m_pitch < -::PITCH_CONSTRAIN)
-    //         m_pitch = -::PITCH_CONSTRAIN;
-    // }
-    //
-    // updateCameraVectors();
+    offsetX *= m_mouseSensitivity;
+    offsetY *= m_mouseSensitivity;
+
+    m_yaw += offsetX;
+    m_pitch -= offsetY;
+
+    if(constrainPitch)
+    {
+        if(m_pitch > ::PITCH_CONSTRAIN)
+            m_pitch = ::PITCH_CONSTRAIN;
+
+        if(m_pitch < -::PITCH_CONSTRAIN)
+            m_pitch = -::PITCH_CONSTRAIN;
+    }
+
+    updateCameraVectors();
 }
 
 void Camera::porocessMouseScroll(float offsetY)
