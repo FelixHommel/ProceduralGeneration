@@ -21,21 +21,15 @@
 namespace
 {
 
-constexpr auto center{ glm::vec3(0.f) };
-constexpr auto gridSpacing{ 1.f };
-constexpr auto isoLevel{ 0.5 };
+constexpr auto CENTER{ glm::vec3(0.f) };
+constexpr auto GRID_SPACING{ 1.f };
+constexpr auto ISO_LEVEL{ 0.5 };
 
-constexpr auto lightColor{ glm::vec3(1.f) };
-constexpr auto objectColor{ glm::vec3(0.99609375f, 0.80078125f, 0.31640625f) };
+constexpr auto LIGHT_COLOR{ glm::vec3(1.f) };
+constexpr auto OBJECT_COLOR{ glm::vec3(0.99609375f, 0.80078125f, 0.31640625f) };
 
-constexpr auto cameraRotateRadius{ 60.f };
-constexpr auto lightPosRadius{ 25.f };
-constexpr auto cameraY{ 8.f };
-
-constexpr auto cameraRotationMod{ 1.5f };
-constexpr auto lightRotationMod{ 5.f };
-
-constexpr auto movingScene{ false };
+constexpr auto LIGHT_POS_RADIUS{ 25.f };
+constexpr auto LIGHT_ROTATION_MOD{ 5.f };
 
 float computeDistanceABC(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c)
 {
@@ -99,10 +93,10 @@ Application::Application()
 
     m_lightSphere->copyToGPU();
 
-    assignScalarField(center);
-    m_grid = std::make_unique<ScalarField>(gridSpacing, center, *m_scalarField);
+    assignScalarField(CENTER);
+    m_grid = std::make_unique<ScalarField>(GRID_SPACING, CENTER, *m_scalarField);
 
-    bufferGridDataGL(isoLevel);
+    bufferGridDataGL(ISO_LEVEL);
 }
 
 Application::~Application()
@@ -154,8 +148,8 @@ void Application::render() const
     const auto marchingCubesModel{ glm::mat4(1.f) };
 
     m_marchingCubesShader->setVector3f("lightPos", lightPos, true);
-    m_marchingCubesShader->setVector3f("lightColor", lightColor);
-    m_marchingCubesShader->setVector3f("objectColor", objectColor);
+    m_marchingCubesShader->setVector3f("lightColor", LIGHT_COLOR);
+    m_marchingCubesShader->setVector3f("objectColor", OBJECT_COLOR);
     m_marchingCubesShader->setMatrix4f("model", marchingCubesModel);
     m_marchingCubesShader->setMatrix4f("view", view);
     m_marchingCubesShader->setMatrix4f("projection", projection);
@@ -169,7 +163,7 @@ void Application::render() const
 
     const auto lightingModel{ glm::translate(glm::mat4(1.f), lightPos) };
 
-    m_lightingShader->setVector3f("lightColor", lightColor, true);
+    m_lightingShader->setVector3f("lightColor", LIGHT_COLOR, true);
     m_lightingShader->setMatrix4f("model", lightingModel);
     m_lightingShader->setMatrix4f("view", view);
     m_lightingShader->setMatrix4f("projection", projection);
