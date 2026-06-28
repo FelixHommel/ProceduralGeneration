@@ -177,6 +177,7 @@ void Application::render() const
     m_lightSphere->draw();
 }
 
+/// \brief Check for user input and update the state of the app.
 void Application::processInput(GLFWwindow* window, float dt)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
