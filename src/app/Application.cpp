@@ -177,25 +177,25 @@ void Application::render() const
     m_lightSphere->draw();
 }
 
-void Application::processInput(GLFWwindow* window, float deltaTime)
+void Application::processInput(GLFWwindow* window, float dt)
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
 
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        m_camera->processKeyboard(Camera::CameraMovement::FORWARD, deltaTime);
+        m_camera->processKeyboard(Camera::CameraMovement::FORWARD, dt);
     else if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        m_camera->processKeyboard(Camera::CameraMovement::BACKWARD, deltaTime);
+        m_camera->processKeyboard(Camera::CameraMovement::BACKWARD, dt);
 
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        m_camera->processKeyboard(Camera::CameraMovement::LEFT, deltaTime);
+        m_camera->processKeyboard(Camera::CameraMovement::LEFT, dt);
     else if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        m_camera->processKeyboard(Camera::CameraMovement::RIGHT, deltaTime);
+        m_camera->processKeyboard(Camera::CameraMovement::RIGHT, dt);
 
     if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-        m_camera->processKeyboard(Camera::CameraMovement::UP, deltaTime);
+        m_camera->processKeyboard(Camera::CameraMovement::UP, dt);
     else if(glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-        m_camera->processKeyboard(Camera::CameraMovement::DOWN, deltaTime);
+        m_camera->processKeyboard(Camera::CameraMovement::DOWN, dt);
 
     if(glfwGetKey(window, GLFW_KEY_M) == GLFW_PRESS)
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -203,14 +203,14 @@ void Application::processInput(GLFWwindow* window, float deltaTime)
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
     if(glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-        m_camera->processKeyboard(Camera::CameraMovement::PITCH_UP, deltaTime);
+        m_camera->processKeyboard(Camera::CameraMovement::PITCH_UP, dt);
     else if(glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-        m_camera->processKeyboard(Camera::CameraMovement::PITCH_DOWN, deltaTime);
+        m_camera->processKeyboard(Camera::CameraMovement::PITCH_DOWN, dt);
 
     if(glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-        m_camera->processKeyboard(Camera::CameraMovement::YAW_RIGHT, deltaTime);
+        m_camera->processKeyboard(Camera::CameraMovement::YAW_RIGHT, dt);
     else if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-        m_camera->processKeyboard(Camera::CameraMovement::YAW_LEFT, deltaTime);
+        m_camera->processKeyboard(Camera::CameraMovement::YAW_LEFT, dt);
 }
 
 /// \brief Initialize the scalar field
