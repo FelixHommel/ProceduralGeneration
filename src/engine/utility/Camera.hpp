@@ -31,9 +31,17 @@ constexpr auto ZOOM_MAX{ 45.f };
 namespace pen
 {
 
+/// \brief The \ref Camera is a abstraction for the observer position.
+///
+/// \author Felix Hommel
+/// \date 6/27/2026
 class Camera
 {
 public:
+    /// \brief \ref CameraMovement indicates the direction in which the camera is moved.
+    ///
+    /// \author Felix Hommel
+    /// \date 6/27/2026
     enum class CameraMovement : std::uint8_t
     {
         FORWARD,
@@ -59,8 +67,20 @@ public:
     [[nodiscard]] float zoom() const noexcept { return m_zoom; }
     [[nodiscard]] glm::mat4 viewMatrix() const { return glm::lookAt(m_position, m_position + m_front, m_up); }
 
+    /// \brief Apply keyboard input on the camera's position.
+    ///
+    /// \param direction The \ref CameraMovement direction.
+    /// \param dt The time delta between frames
     void processKeyboard(CameraMovement direction, float dt);
+    /// \brief Apply mouse movement input on the camera's position.
+    ///
+    /// \param offsetX The offset the mouse moved on the x-axis
+    /// \param offsetY The offset the mouse moved on the y-axis
+    /// \param constrainPitch Whether or not the maximum pitch should be constrained or not
     void processMouseMovement(float offsetX, float offsetY, bool constrainPitch = true);
+    /// \brief Apply mouse wheel movement on the camera's zoom.
+    ///
+    /// \param offsetY The amount of scroll that happened
     void porocessMouseScroll(float offsetY);
 
 private:

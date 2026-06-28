@@ -83,6 +83,7 @@ void Camera::porocessMouseScroll(float offsetY)
         m_zoom = ::ZOOM_MAX;
 }
 
+/// \brief Calculate the new camera vectors based on the updated positional data.
 void Camera::updateCameraVectors()
 {
     glm::vec3 front{ std::cos(glm::radians(m_yaw)) * std::cos(glm::radians(m_pitch)),
