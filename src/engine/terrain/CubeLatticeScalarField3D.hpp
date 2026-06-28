@@ -177,6 +177,7 @@ private:
             return { i, j + 1, k };
         default:
             PEN_ASSERT(false, "Vertex index is out of bounds");
+            return { 0, 0, 0 };
         }
         // NOLINTEND(readability-magic-numbers)
     }
