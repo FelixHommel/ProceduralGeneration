@@ -97,6 +97,8 @@ void Application::start()
     float lastTime{ 0.f };
     while(!m_window->shouldClose())
     {
+        glDisable(GL_CULL_FACE);
+
         float currentTime{ static_cast<float>(glfwGetTime()) };
         deltaTime = currentTime - lastTime;
         lastTime = currentTime;
