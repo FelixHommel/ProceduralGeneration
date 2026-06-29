@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 include(cmake/vcpkg-dependencies.cmake)
+add_subdirectory(external)
 include(cmake/DefaultProjectSettings.cmake)
 include(cmake/CodeCoverage.cmake)
 

@@ -42,6 +42,7 @@ target_link_libraries(
     ${NAME}
     PUBLIC glm::glm
     PRIVATE
+        FastNoise
         Glad2CMake::glad2cmake
         glfw
         OpenGL::GL
