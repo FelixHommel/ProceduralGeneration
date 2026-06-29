@@ -36,8 +36,13 @@ vec3 specularLight(vec3 lightDir, vec3 normal)
 
 void main()
 {
-    vec3 lightDir = normalize(lightPos - fragPos);
+    vec3 viewDir = normalize(viewPos - fragPos);
     vec3 norm = normalize(normal);
+
+    if(dot(norm, viewDir) < 0.f)
+        norm = -norm;
+
+    vec3 lightDir = normalize(lightPos - fragPos);
 
     vec3 result = (ambientLight() + diffuseLight(lightDir, norm) + specularLight(lightDir, norm)) * objectColor;
     fragColor = vec4(result, 1.f);
