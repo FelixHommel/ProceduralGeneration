@@ -54,8 +54,8 @@ Application::Application()
     m_window->registerCursorPosCallback([](GLFWwindow* window, double posXIn, double posYIn) {
         auto* self{ static_cast<Application*>(glfwGetWindowUserPointer(window)) };
 
-        float posX{ static_cast<float>(posXIn) };
-        float posY{ static_cast<float>(posYIn) };
+        const auto posX{ static_cast<float>(posXIn) };
+        const auto posY{ static_cast<float>(posYIn) };
 
         if(self->m_firstMouse)
         {
@@ -64,8 +64,8 @@ Application::Application()
             self->m_firstMouse = false;
         }
 
-        float offsetX{ posX - self->m_lastMouseX };
-        float offsetY{ posY - self->m_lastMouseY };
+        const auto offsetX{ posX - self->m_lastMouseX };
+        const auto offsetY{ posY - self->m_lastMouseY };
 
         self->m_lastMouseX = posX;
         self->m_lastMouseY = posY;
@@ -99,7 +99,7 @@ void Application::start()
     {
         glDisable(GL_CULL_FACE);
 
-        float currentTime{ static_cast<float>(glfwGetTime()) };
+        const auto currentTime{ static_cast<float>(glfwGetTime()) };
         deltaTime = currentTime - lastTime;
         lastTime = currentTime;
 
@@ -122,19 +122,16 @@ void Application::update(float deltaTime) const
 /// \brief Render the scene to the screen.
 void Application::render() const
 {
-    const auto windowSize{ m_window->viewport() };
-    const auto projection{ glm::perspective(
-        glm::radians(m_camera->zoom()),
-        static_cast<float>(windowSize.width) / static_cast<float>(windowSize.height),
-        0.1f,
-        100.f
-    ) };
+    const auto [w, h]{ m_window->viewport() };
+    const auto projection{
+        glm::perspective(glm::radians(m_camera->zoom()), static_cast<float>(w) / static_cast<float>(h), 0.1f, 100.f)
+    };
 
     const auto view{ m_camera->viewMatrix() };
     const auto viewPos{ m_camera->position() };
 
-    const auto lightPos{ glm::vec3(0.f) };
-    const auto marchingCubesModel{ glm::mat4(1.f) };
+    constexpr auto lightPos{ glm::vec3(0.f) };
+    constexpr auto marchingCubesModel{ glm::mat4(1.f) };
 
     m_marchingCubesShader->setVector3f("lightPos", lightPos, true);
     m_marchingCubesShader->setVector3f("lightColor", LIGHT_COLOR);
@@ -150,7 +147,7 @@ void Application::render() const
         glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(m_numberOfVerticesToDraw));
     }
 
-    const auto lightingModel{ glm::translate(glm::mat4(1.f), lightPos) };
+    constexpr auto lightingModel{ glm::translate(glm::mat4(1.f), lightPos) };
 
     m_lightingShader->setVector3f("lightColor", LIGHT_COLOR, true);
     m_lightingShader->setMatrix4f("model", lightingModel);
