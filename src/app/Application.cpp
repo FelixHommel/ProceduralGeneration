@@ -1,10 +1,10 @@
 #include "Application.hpp"
 
 #include "opengl/Shader.hpp"
+#include "rendering/Camera.hpp"
 #include "rendering/GlfwContext.hpp"
 #include "rendering/Window.hpp"
 #include "terrain/Sphere.hpp"
-#include "utility/Camera.hpp"
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>

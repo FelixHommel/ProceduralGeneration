@@ -2,12 +2,12 @@
 #define PEN_SRC_APP_APPLICATION_HPP
 
 #include "opengl/Shader.hpp"
+#include "rendering/Camera.hpp"
 #include "rendering/GlfwContext.hpp"
 #include "rendering/Window.hpp"
 #include "terrain/CubeLatticeScalarField3D.hpp"
 #include "terrain/LatticeData3D.hpp"
 #include "terrain/Sphere.hpp"
-#include "utility/Camera.hpp"
 
 #include <glm/glm.hpp>
 
