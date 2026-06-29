@@ -48,11 +48,11 @@ Application::Application()
 {
     m_window->setWindowUserPointer(this);
     m_window->registerWindowResizeCallback([](GLFWwindow* window, int width, int height) {
-        auto* self{ reinterpret_cast<Application*>(glfwGetWindowUserPointer(window)) };
+        auto* self{ static_cast<Application*>(glfwGetWindowUserPointer(window)) };
         self->m_window->setViewport(width, height);
     });
     m_window->registerCursorPosCallback([](GLFWwindow* window, double posXIn, double posYIn) {
-        auto* self{ reinterpret_cast<Application*>(glfwGetWindowUserPointer(window)) };
+        auto* self{ static_cast<Application*>(glfwGetWindowUserPointer(window)) };
 
         float posX{ static_cast<float>(posXIn) };
         float posY{ static_cast<float>(posYIn) };
