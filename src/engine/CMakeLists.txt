@@ -20,6 +20,7 @@ target_sources(
                 ./rendering/Window.hpp
                 ./terrain/CubeLattice3D.hpp
                 ./terrain/CubeLatticeScalarField3D.hpp
+                ./terrain/IScalarFieldGenerator.hpp
                 ./terrain/LatticeData3D.hpp
                 ./terrain/MarchingCubesData.hpp
                 ./terrain/Sphere.hpp
