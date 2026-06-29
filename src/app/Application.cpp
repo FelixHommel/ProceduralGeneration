@@ -28,19 +28,6 @@ constexpr auto ISO_LEVEL{ 0.5 };
 constexpr auto LIGHT_COLOR{ glm::vec3(1.f) };
 constexpr auto OBJECT_COLOR{ glm::vec3(0.99609375f, 0.80078125f, 0.31640625f) };
 
-constexpr auto LIGHT_POS_RADIUS{ 25.f };
-constexpr auto LIGHT_ROTATION_MOD{ 5.f };
-
-float computeDistanceABC(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c)
-{
-    const auto d{ (c - b) / glm::distance(c, b) };
-    const auto v{ a - b };
-    const auto t{ glm::dot(v, d) };
-    const auto p{ b + (t * d) };
-
-    return glm::distance(p, a);
-}
-
 } // namespace
 
 namespace pen::app
@@ -213,24 +200,25 @@ void Application::processInput(GLFWwindow* window, float dt)
 /// \param center (optional) Where the center of the field is
 void Application::assignScalarField(const glm::vec3& center)
 {
-    for(std::size_t i{ 0 }; i < ::LATTICE_X; ++i)
-    {
-        for(std::size_t j{ 0 }; j < ::LATTICE_Y; ++j)
-        {
-            for(std::size_t k{ 0 }; k < ::LATTICE_Z; ++k)
-            {
-                const auto distance{ glm::vec3(
-                    static_cast<float>(i) - center[0] - (static_cast<float>(::LATTICE_X) / 2.f),
-                    static_cast<float>(j) - center[1] - (static_cast<float>(::LATTICE_Y) / 2.f),
-                    static_cast<float>(k) - center[2] - (static_cast<float>(::LATTICE_Z) / 2.f)
-                ) };
+    constexpr float R{ 8.f };
+    constexpr float r{ 3.f };
 
-                const auto distSq{ glm::length(distance) };
-                const auto perpDist{ ::computeDistanceABC(distance, glm::vec3(0.f), { 1.f, 0.f, 0.f }) };
+    for(std::size_t i = 0; i < ::LATTICE_X; ++i)
+    {
+        for(std::size_t j = 0; j < ::LATTICE_Y; ++j)
+        {
+            for(std::size_t k = 0; k < ::LATTICE_Z; ++k)
+            {
+                const auto x{ static_cast<float>(i) - (static_cast<float>(::LATTICE_X) / 2.f) + center.x };
+                const auto y{ static_cast<float>(j) - (static_cast<float>(::LATTICE_Y) / 2.f) + center.y };
+                const auto z{ static_cast<float>(k) - (static_cast<float>(::LATTICE_Z) / 2.f) + center.z };
+
+                const auto distToRing{
+                    std::sqrt(((std::sqrt((x * x) + (z * z)) - R) * (std::sqrt((x * x) + (z * z)) - R)) + (y * y))
+                };
 
                 // NOLINTBEGIN(readability-magic-numbers)
-                (*m_scalarField)[{ i, j, k }]
-                    = static_cast<float>(std::max(std::exp(-0.0085f * distSq) - std::exp(-0.3f * perpDist), 0.f));
+                (*m_scalarField)[{ i, j, k }] = std::max(0.f, 1.f - (distToRing / r));
                 // NOLINTEND(readability-magic-numbers)
             }
         }
