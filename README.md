@@ -1,5 +1,9 @@
 # ProceduralGeneration
 
+![Preview image](./docs/readme/preview.png)
+
+> Current state of the application: Spherical Light with a marching cubes generated torus around it.
+
 Real-time terrain generation in a 3D world from a procedural density field. CUDA kernels are responsible for evaluating
 the density field and extracting a mesh out of it via Marching Cubes, which then can be drawn by OpenGL.
 
