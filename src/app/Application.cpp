@@ -114,7 +114,7 @@ void Application::start()
 }
 
 /// \brief Update the interactive systems.
-void Application::update(float deltaTime)
+void Application::update(float deltaTime) const
 {
     processInput(m_window->handle(), deltaTime);
 }
@@ -161,7 +161,7 @@ void Application::render() const
 }
 
 /// \brief Check for user input and update the state of the app.
-void Application::processInput(GLFWwindow* window, float dt)
+void Application::processInput(GLFWwindow* window, float dt) const
 {
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GLFW_TRUE);
@@ -200,7 +200,7 @@ void Application::processInput(GLFWwindow* window, float dt)
 /// \brief Initialize the scalar field
 ///
 /// \param center (optional) Where the center of the field is
-void Application::assignScalarField(const glm::vec3& center)
+void Application::assignScalarField(const glm::vec3& center) const
 {
     constexpr float R{ 8.f };
     constexpr float r{ 3.f };

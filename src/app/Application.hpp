@@ -63,12 +63,12 @@ private:
     float m_lastMouseX{ 0 };
     float m_lastMouseY{ 0 };
 
-    void update(float deltaTime);
+    void update(float deltaTime) const;
     void render() const;
 
-    void processInput(GLFWwindow* window, float dt);
+    void processInput(GLFWwindow* window, float dt) const;
 
-    void assignScalarField(const glm::vec3& center = glm::vec3(0.f));
+    void assignScalarField(const glm::vec3& center = glm::vec3(0.f)) const;
     void bufferGridDataGL(double isoLevel);
 };
 
