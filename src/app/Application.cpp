@@ -5,6 +5,7 @@
 #include "rendering/GlfwContext.hpp"
 #include "rendering/Window.hpp"
 #include "terrain/Sphere.hpp"
+#include "terrain/TorusScalarFieldGenerator.hpp"
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -17,6 +18,7 @@
 #include <cmath>
 #include <cstddef>
 #include <memory>
+#include <utility>
 
 namespace
 {
@@ -43,7 +45,6 @@ Application::Application()
           PEN_ROOT "resources/shaders/LightSource.vert", PEN_ROOT "resources/shaders/LightSource.frag"
       ) }
     , m_lightSphere{ std::make_unique<Sphere>() }
-    , m_scalarField{ std::make_unique<LatticeData>() }
     , m_camera{ std::make_unique<Camera>() }
 {
     m_window->setWindowUserPointer(this);
@@ -80,7 +81,9 @@ Application::Application()
 
     m_lightSphere->copyToGPU();
 
-    assignScalarField(CENTER);
+    TorusScalarFieldGenerator<::LATTICE_X, ::LATTICE_Y, ::LATTICE_Z> gen{};
+    m_scalarField = std::move(gen.generate(CENTER));
+
     m_grid = std::make_unique<ScalarField>(GRID_SPACING, CENTER, *m_scalarField);
 
     bufferGridDataGL(ISO_LEVEL);
