@@ -232,10 +232,10 @@ void Application::assignScalarField(const glm::vec3& center)
 /// \param isoLevel how detailed to mesh is.
 void Application::bufferGridDataGL(double isoLevel)
 {
-    constexpr auto VETEX_ATTRIBUTE_COUNT{ 6 };
+    constexpr auto VERTEX_ATTRIBUTE_COUNT{ 6 };
 
     const auto vertices{ m_grid->computeVertexDrawData(isoLevel) };
-    m_numberOfVerticesToDraw = vertices.size() / VETEX_ATTRIBUTE_COUNT;
+    m_numberOfVerticesToDraw = vertices.size() / VERTEX_ATTRIBUTE_COUNT;
 
     if(m_numberOfVerticesToDraw == 0)
         return;
@@ -251,11 +251,11 @@ void Application::bufferGridDataGL(double isoLevel)
         GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(sizeof(float) * vertices.size()), vertices.data(), GL_STATIC_DRAW
     );
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * VETEX_ATTRIBUTE_COUNT, nullptr);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_COUNT, nullptr);
     glEnableVertexAttribArray(0);
 
     glVertexAttribPointer(
-        1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * VETEX_ATTRIBUTE_COUNT, reinterpret_cast<void*>(sizeof(float) * 3)
+        1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_ATTRIBUTE_COUNT, reinterpret_cast<void*>(sizeof(float) * 3)
     );
     glEnableVertexAttribArray(1);
 
