@@ -7,4 +7,4 @@ set(FASTNOISE2_STRICT_FP
     "Enable strict floating point calculations to ensure output from different SIMD feature sets match EXACTLY"
     FORCE
 )
-add_subdirectory(FastNoise2)
+add_subdirectory(FastNoise2 SYSTEM)
