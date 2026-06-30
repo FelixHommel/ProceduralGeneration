@@ -8,6 +8,18 @@
 #include <cstddef>
 #include <memory>
 
+namespace
+{
+
+namespace defaults
+{
+
+constexpr auto CENTER{ glm::vec3(0.f) };
+
+} // namespace defaults
+
+} // namespace
+
 namespace pen
 {
 

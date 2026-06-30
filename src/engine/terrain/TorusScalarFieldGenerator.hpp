@@ -16,7 +16,6 @@ namespace
 namespace defaults
 {
 
-constexpr auto CENTER{ glm::vec3(0.f) };
 constexpr auto OUTER_RADIUS{ 8.f };
 constexpr auto INNER_RADIUS{ 3.f };
 
