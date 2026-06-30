@@ -54,6 +54,9 @@ public:
     /// \brief Const value array access.
     const T& value(std::size_t i, std::size_t j, std::size_t k) const { return m_data[linearizeIndex(i, j, k)]; }
 
+    T* data() { return m_data.data(); }
+    const T* data() const { return m_data.data(); }
+
 protected:
     std::array<T, X * Y * Z> m_data;
 
