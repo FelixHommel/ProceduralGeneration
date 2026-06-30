@@ -24,6 +24,7 @@ target_sources(
                 ./terrain/LatticeData3D.hpp
                 ./terrain/MarchingCubesData.hpp
                 ./terrain/Sphere.hpp
+                ./terrain/TerrainScalarFieldGenerator.hpp
                 ./terrain/TorusScalarFieldGenerator.hpp
                 ./utility/Assert.hpp
                 ./rendering/Camera.hpp
