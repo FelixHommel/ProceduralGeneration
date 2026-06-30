@@ -72,6 +72,10 @@ public:
 
         m_generator->GenUniformGrid3D(field->data(), 0, 0, 0, X, Y, Z, 1.f, 1.f, 1.f, SEED);
 
+        // NOTE: Normalize value range to [0, 1] because FastNoise provides [-1, 1]
+        for(std::size_t i{ 0 }; i < X * Y * Z; ++i)
+            (*field)[i] = ((*field)[i] * 0.5f) + 0.5f;
+
         return field;
     };
 
