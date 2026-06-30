@@ -6,7 +6,6 @@
 #include "rendering/Window.hpp"
 #include "terrain/Sphere.hpp"
 #include "terrain/TerrainScalarFieldGenerator.hpp"
-#include "terrain/TorusScalarFieldGenerator.hpp"
 
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -79,7 +78,6 @@ Application::Application()
 
     m_lightSphere->copyToGPU();
 
-    TorusScalarFieldGenerator<::LATTICE_X, ::LATTICE_Y, ::LATTICE_Z> gen{};
     TerrainScalarFieldGenerator<::LATTICE_X, ::LATTICE_Y, ::LATTICE_Z> genT{};
     m_scalarField = std::move(genT.generate(CENTER));
 
