@@ -1,6 +1,6 @@
 # ProceduralGeneration
 
-![Preview image](./docs/readme/preview.png)
+![Preview image](./docs/readme/random_single_chunk.png)
 
 > Current state of the application: Spherical Light with a marching cubes generated torus around it.
 
@@ -54,3 +54,8 @@ labeled as such and can be filtered out by ctest.
 
 - [LearnOpenGL.com](https://learnopengl.com/)
 - [OpenGL Sphere](https://www.songho.ca/opengl/gl_sphere.html)
+
+## History
+
+![Stage 1](./docs/readme/torus.png)
+> First stage of the project: A torus with a lighting sphere in the center
