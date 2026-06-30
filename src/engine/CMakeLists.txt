@@ -40,9 +40,8 @@ endif()
 
 target_link_libraries(
     ${NAME}
-    PUBLIC glm::glm
+    PUBLIC glm::glm FastNoise
     PRIVATE
-        FastNoise
         Glad2CMake::glad2cmake
         glfw
         OpenGL::GL
