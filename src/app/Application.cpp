@@ -22,7 +22,7 @@ namespace
 
 constexpr auto CENTER{ glm::vec3(0.f) };
 constexpr auto GRID_SPACING{ 1.f };
-constexpr auto ISO_LEVEL{ 0.5 };
+constexpr auto ISO_LEVEL{ 0.2 };
 
 constexpr auto LIGHT_COLOR{ glm::vec3(1.f) };
 constexpr auto OBJECT_COLOR{ glm::vec3(0.99609375f, 0.80078125f, 0.31640625f) };
