@@ -15,9 +15,6 @@
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/glm.hpp>
 
-#include <algorithm>
-#include <cmath>
-#include <cstddef>
 #include <memory>
 #include <utility>
 
@@ -197,36 +194,6 @@ void Application::processInput(GLFWwindow* window, float dt) const
         m_camera->processKeyboard(Camera::CameraMovement::YAW_RIGHT, dt);
     else if(glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
         m_camera->processKeyboard(Camera::CameraMovement::YAW_LEFT, dt);
-}
-
-/// \brief Initialize the scalar field
-///
-/// \param center (optional) Where the center of the field is
-void Application::assignScalarField(const glm::vec3& center) const
-{
-    constexpr float R{ 8.f };
-    constexpr float r{ 3.f };
-
-    for(std::size_t i = 0; i < ::LATTICE_X; ++i)
-    {
-        for(std::size_t j = 0; j < ::LATTICE_Y; ++j)
-        {
-            for(std::size_t k = 0; k < ::LATTICE_Z; ++k)
-            {
-                const auto x{ static_cast<float>(i) - (static_cast<float>(::LATTICE_X) / 2.f) + center.x };
-                const auto y{ static_cast<float>(j) - (static_cast<float>(::LATTICE_Y) / 2.f) + center.y };
-                const auto z{ static_cast<float>(k) - (static_cast<float>(::LATTICE_Z) / 2.f) + center.z };
-
-                const auto distToRing{
-                    std::sqrt(((std::sqrt((x * x) + (z * z)) - R) * (std::sqrt((x * x) + (z * z)) - R)) + (y * y))
-                };
-
-                // NOLINTBEGIN(readability-magic-numbers)
-                (*m_scalarField)[{ i, j, k }] = std::max(0.f, 1.f - (distToRing / r));
-                // NOLINTEND(readability-magic-numbers)
-            }
-        }
-    }
 }
 
 /// \brief Upload the vertex data to the GPU.

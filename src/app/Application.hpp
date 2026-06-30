@@ -68,7 +68,6 @@ private:
 
     void processInput(GLFWwindow* window, float dt) const;
 
-    void assignScalarField(const glm::vec3& center = glm::vec3(0.f)) const;
     void bufferGridDataGL(double isoLevel);
 };
 
